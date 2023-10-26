@@ -20,3 +20,13 @@
     font-weight: 700;
     padding-left: 1rem;
 }
+
+.true {
+    border-color: #3eb38c;
+    background-color: #164032;
+}
+
+.false {
+    border-color: #e53935;
+    background-color: #661917;
+}
