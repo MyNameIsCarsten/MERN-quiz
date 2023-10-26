@@ -1,0 +1,12 @@
+
+#answers {
+    /*background-color: #141C3A;*/
+    display: flex;
+    flex-direction: column;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    height: calc(100vh - 200px);
+    margin: 0 200px;
+  }
+
+
