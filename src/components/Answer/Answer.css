@@ -1,0 +1,22 @@
+.answer {
+    border: 1px solid #2d5dcc;
+    background-color: #141C3A;
+    border: 1px solid #2d5dcc;
+    margin: 1rem 0;
+    border-radius: 2px;
+    min-height: 4rem;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    cursor: pointer;
+    text-align: left;
+    transition: .25s;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    color: #4fe0b0;
+    font-size: 1rem;
+    font-weight: 700;
+    padding-left: 1rem;
+}

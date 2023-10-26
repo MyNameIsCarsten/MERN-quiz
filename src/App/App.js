@@ -1,3 +1,4 @@
+import Answers from '../components/Answers/Answers';
 import Navbar from '../components/Navbar/Navbar';
 import Progressbar from '../components/Progressbar/Progressbar';
 import './App.css';
@@ -7,6 +8,7 @@ function App() {
     <div className="App">
       <Navbar />
       <p id='question'>Hello World</p>
+      <Answers />
       <Progressbar />
     </div>
   );
