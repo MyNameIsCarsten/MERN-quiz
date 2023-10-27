@@ -3,7 +3,7 @@ import './Answer.css'
 
 const Answer = ({ isCorrect, clickHandler, text, answerId }) => {
 
-    const hasSelected = useSelector((state) => state.answer.hasSelected);
+    const hasSelected = useSelector((state) => state.app.hasSelected);
     const selectedAnswer = useSelector((state) => state.app.selectedAnswer);
 
     return (
