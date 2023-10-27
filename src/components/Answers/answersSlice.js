@@ -5,7 +5,6 @@ export const answersSlice = createSlice({
     initialState: 
     [
         {
-            questionId: 1,
             answers: {
                 1:{
                     answer: 'Hello World',
@@ -16,7 +15,7 @@ export const answersSlice = createSlice({
                     isCorrect: false
                 },
                 3:{
-                    answer: 'Hello World',
+                    answer: 'Hello City',
                     isCorrect: false
                 },
                 4:{
