@@ -1,5 +1,5 @@
-import React from 'react'
 import { useSelector } from 'react-redux'
+import './Question.css';
 
 const Question = () => {
   const curQuestionIndex = useSelector((state) => state.app.currentQuestion)

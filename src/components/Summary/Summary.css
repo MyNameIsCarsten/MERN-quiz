@@ -72,3 +72,46 @@
     display: inline-block;
     margin: 5px 10px;
 }
+
+@media only screen and (min-width:481px) and (max-width: 768px) {
+    #restart {
+        padding: 20px;
+    }
+  }
+
+  @media only screen and (max-width: 480px) {
+    #question {
+        padding: 10px;
+        margin: 25px;
+    }
+
+    .summary-stats {
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+    }
+
+    .summary-stats span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #result-container {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    #middle-container {
+        width: 80px;
+        height: 2px;
+    }
+
+    #summary-box {
+        padding: 25px;
+    }
+
+    #restart {
+        padding: 20px;
+    }
+  }

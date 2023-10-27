@@ -1,6 +1,5 @@
 
 #answers {
-    /*background-color: #141C3A;*/
     display: flex;
     flex-direction: column;
     font-size: calc(10px + 2vmin);
@@ -9,4 +8,14 @@
     margin: 0 200px;
   }
 
+  @media only screen and (min-width:481px) and (max-width: 768px) {
+    #answers {
+      margin: 0 100px;
+    }
+  }
 
+  @media only screen and (max-width: 480px) {
+    #answers {
+      margin: 0 50px;
+    }
+  }

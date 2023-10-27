@@ -14,9 +14,9 @@ const Answers = () => {
         // user has made a choice
         dispatch(toggleSelected());
         // selected answer of user
-        dispatch(selectAnswer(parseInt(e.target.name)))
+        dispatch(selectAnswer(parseInt(e.target.name)));
         // check if user was right
-        dispatch(updateUserIsRight(curAnswers[e.target.name].isCorrect))
+        dispatch(updateUserIsRight(curAnswers[e.target.name].isCorrect));
     }
 
   return (

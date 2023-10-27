@@ -10,11 +10,11 @@ const Answer = ({ isCorrect, clickHandler, text, answerId }) => {
         <>
         {hasSelected ? 
             <button className={`answer ${parseInt(answerId) === selectedAnswer || isCorrect === true ? isCorrect : ''}`} data-testid='answer' name={answerId}>
-                <p>{text}</p>
+                {text}
             </button> 
             :
             <button className={`answer`} data-testid='answer' onClick={clickHandler} name={answerId}>
-                <p>{text}</p>
+                {text}
             </button> 
         }
         </>
