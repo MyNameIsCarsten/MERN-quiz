@@ -1,5 +1,4 @@
-import { createSlice, current } from '@reduxjs/toolkit';
-import { useSelector } from 'react-redux';
+import { createSlice } from '@reduxjs/toolkit';
 
 export const appSlice = createSlice({
     name: 'app',

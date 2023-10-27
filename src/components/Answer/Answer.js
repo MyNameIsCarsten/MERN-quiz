@@ -4,11 +4,12 @@ import './Answer.css'
 const Answer = ({ isCorrect, clickHandler, text, answerId }) => {
 
     const hasSelected = useSelector((state) => state.answer.hasSelected);
+    const selectedAnswer = useSelector((state) => state.app.selectedAnswer);
 
     return (
         <>
         {hasSelected ? 
-            <button className={`answer ${isCorrect}`} data-testid='answer' name={answerId}>
+            <button className={`answer ${parseInt(answerId) === selectedAnswer || isCorrect === true ? isCorrect : ''}`} data-testid='answer' name={answerId}>
                 <p>{text}</p>
             </button> 
             :
