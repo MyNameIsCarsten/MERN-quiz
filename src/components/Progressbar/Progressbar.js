@@ -1,18 +1,19 @@
 import './Progressbar.css';
 import { nextQuestion } from '../../App/appSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { toggleCompleted } from '../../App/appSlice';
 
 const Progressbar = () => {
   const dispatch = useDispatch();
   const hasSelected = useSelector((state) => state.app.hasSelected)
   const quiz = useSelector((state)=>state.quiz)
   const curQuestion = useSelector((state)=>state.app.currentQuestion)
-  const correctAnswers = useSelector((state)=>state.app.correctAnswers)
-  const totalAnswers = useSelector((state)=>state.app.totalAnswers)
 
   function clickHandler() {
     if(curQuestion + 1 <= quiz.length - 1){
       dispatch(nextQuestion());
+    } else {
+      dispatch(toggleCompleted());
     }
   }
 
@@ -20,7 +21,6 @@ const Progressbar = () => {
     const quizLength = quiz.length;
     let progress = (curQuestion + 1 ) / quizLength
     progress = Math.round(progress * 100)
-    console.log('Progress: ', progress)
     return progress;
   }
 
@@ -28,8 +28,6 @@ const Progressbar = () => {
     height: 12, 
     width: `${Math.max(calculateProgress(), 0)}%`
   }
-
-  calculateProgress();
 
   return (
     <div data-testid='progressbar'>
