@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      <p id='question'>Hello World</p>
+      <p id='question'>Question</p>
       <Answers />
       <Progressbar />
     </div>

@@ -1,24 +1,21 @@
 import './Answers.css'
 import Answer from '../Answer/Answer'
-import { useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleSelected } from '../Answer/answerSlice';
 
 const Answers = () => {
 
-    const [ hasSelected, setHasSelected ] = useState(false);
-
-
+    const answers = useSelector((state) => state.answers);
+    const curAnswers = answers[0].answers
+    const dispatch = useDispatch();
+  
     function clickHandler(e) {
-        console.log(e.target.getAttribute("class"))
-        setHasSelected(true)
-        
+        dispatch(toggleSelected());
     }
 
   return (
     <div data-testid='answers' id='answers'>
-      <Answer isCorrect={true} clickHandler={clickHandler} hasSelected={hasSelected}/>
-      <Answer isCorrect={false} clickHandler={clickHandler} hasSelected={hasSelected}/>
-      <Answer isCorrect={false} clickHandler={clickHandler} hasSelected={hasSelected}/>
-      <Answer isCorrect={false} clickHandler={clickHandler} hasSelected={hasSelected}/>
+      { Object.keys(curAnswers).map((a,i) => <Answer key={i} isCorrect={curAnswers[a].isCorrect} clickHandler={clickHandler} text={curAnswers[a].answer}/>)}
     </div>
   )
 }
