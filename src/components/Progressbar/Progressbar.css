@@ -11,9 +11,13 @@ footer {
     flex: 1 1;
 }
 
-footer p {
+footer #barContainer {
     flex: 2 1;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
 #buttonContainer {
@@ -29,4 +33,15 @@ footer button {
     padding: 8px 10px;
     margin-right: 30px;
     font-weight: bold;
+}
+
+.light-grey {
+    margin-top: 4px;
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+}
+
+.grey {
+    background-color: #f1f1f1;
+    border-radius: 10px  0 0 10px ;
 }
