@@ -1,8 +1,9 @@
-import { render, screen, fireEvent } from '../../setupTests';
+import { render, screen } from '../../setupTests';
 // npm install redux-mock-store
 import configureStore from 'redux-mock-store';
 import Answers from './Answers';
 import { toggleSelected } from '../Answer/answerSlice';
+import { selectAnswer, updateUserIsRight } from '../../App/appSlice';
 import userEvent from '@testing-library/user-event'
 
 const mockStore = configureStore([]);
@@ -11,6 +12,10 @@ const initialState = {
   answer: {
     hasSelected: false,
   },
+  app: {
+    selectedAnswer: null,
+    userIsRight: null,
+  }
 };
 
 // Create a mock store
@@ -44,6 +49,50 @@ describe('Answers Component', () => {
 
     // Check that the correct action type and payload are returned 
     expect(store.getActions()).toEqual([{ type: 'answer/toggleSelected', payload: undefined }])
+
+  });
+
+  it('should update selectedAnswer state from null on click', () => {
+
+    // Render component
+    render(<Answers />);
+
+    // Check that the initial state is false
+    expect(store.getState().app.selectedAnswer).toBe(null);
+
+
+    const answerId = 1
+    // Simulate a click event
+    userEvent.click(screen.getByText('Hello World'))
+
+    
+    // Dispatch the action manually into mock store
+    store.dispatch(selectAnswer(answerId));
+
+    // Check that the correct action type and payload are returned 
+    expect(store.getActions()).toEqual([{ type: 'app/selectAnswer', payload: answerId }])
+
+  });
+
+  it('should update userIsRight state from null on click', () => {
+
+    // Render component
+    render(<Answers />);
+
+    // Check that the initial state is false
+    expect(store.getState().app.selectedAnswer).toBe(null);
+
+
+    const isRight = true
+    // Simulate a click event
+    userEvent.click(screen.getByText('Hello World'))
+
+    
+    // Dispatch the action manually into mock store
+    store.dispatch(updateUserIsRight(isRight));
+
+    // Check that the correct action type and payload are returned 
+    expect(store.getActions()).toEqual([{ type: 'app/updateUserIsRight', payload: true }])
 
   });
 });
