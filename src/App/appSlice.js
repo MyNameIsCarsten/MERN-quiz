@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 export const appSlice = createSlice({
     name: 'app',
     initialState: {
+        hasSelected: false,
         selectedAnswer: null,
         currentQuestion: 0,
         userIsRight: null,
@@ -13,9 +14,15 @@ export const appSlice = createSlice({
         },
         updateUserIsRight:(state, action) =>{
             state.userIsRight = action.payload;
+        },
+        nextQuestion:(state, action) =>{
+            state.currentQuestion = state.currentQuestion + 1;
+        },
+        toggleSelected:(state, action) =>{
+            state.hasSelected = true;
         }
     },
 });
 
 export default appSlice.reducer;
-export const { selectAnswer, updateUserIsRight} = appSlice.actions
+export const { selectAnswer, updateUserIsRight, nextQuestion, toggleSelected} = appSlice.actions

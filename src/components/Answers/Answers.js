@@ -1,12 +1,12 @@
 import './Answers.css'
 import Answer from '../Answer/Answer'
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleSelected } from '../Answer/answerSlice';
+import { toggleSelected } from '../../App/appSlice';
 import { selectAnswer, updateUserIsRight } from '../../App/appSlice';
 
 const Answers = () => {
     const curQuestion = useSelector((state) => state.app.currentQuestion);
-    const answers = useSelector((state) => state.answers);
+    const answers = useSelector((state) => state.quiz);
     const curAnswers = answers[curQuestion].answers
     const dispatch = useDispatch();
   

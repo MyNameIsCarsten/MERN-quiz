@@ -2,7 +2,7 @@ import { render, screen } from '../../setupTests';
 // npm install redux-mock-store
 import configureStore from 'redux-mock-store';
 import Answers from './Answers';
-import { toggleSelected } from '../Answer/answerSlice';
+import { toggleSelected } from '../../App/appSlice';
 import { selectAnswer, updateUserIsRight } from '../../App/appSlice';
 import userEvent from '@testing-library/user-event'
 
@@ -48,7 +48,7 @@ describe('Answers Component', () => {
     store.dispatch(toggleSelected());
 
     // Check that the correct action type and payload are returned 
-    expect(store.getActions()).toEqual([{ type: 'answer/toggleSelected', payload: undefined }])
+    expect(store.getActions()).toEqual([{ type: 'app/toggleSelected', payload: undefined }])
 
   });
 

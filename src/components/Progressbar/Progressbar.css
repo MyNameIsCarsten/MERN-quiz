@@ -6,3 +6,27 @@ footer {
     justify-content: center;
     align-items: center;
 }
+
+#emptyProgress {
+    flex: 1 1;
+}
+
+footer p {
+    flex: 2 1;
+    text-align: center;
+}
+
+#buttonContainer {
+    flex: 1 1;
+    text-align: right;
+}
+
+footer button {
+    cursor: pointer;
+    background-color: #FFD300;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 10px;
+    margin-right: 30px;
+    font-weight: bold;
+}

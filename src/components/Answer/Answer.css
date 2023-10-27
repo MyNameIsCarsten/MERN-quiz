@@ -4,7 +4,7 @@
     border: 1px solid #2d5dcc;
     margin: 1rem 0;
     border-radius: 2px;
-    min-height: 4rem;
+    min-height: 4em;
     display: flex;
     justify-content: space-between;
     flex-direction: row;
