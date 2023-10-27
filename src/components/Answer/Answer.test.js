@@ -1,7 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '../../setupTests';
 import Answer from './Answer';
 
-test('renders navbar', () => {
+test('renders answer', () => {
   render(<Answer />);
   const linkElement = screen.getByTestId('answer');
   expect(linkElement).toBeInTheDocument();
