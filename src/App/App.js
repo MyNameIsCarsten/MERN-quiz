@@ -14,8 +14,10 @@ function App() {
     return (
       <div className="App">
         <Navbar />
-        <Question />
-        <Answers />
+        <div style={{overflow: 'auto'}}>
+          <Question />
+          <Answers />
+        </div>
         <Progressbar />
       </div>
     );
