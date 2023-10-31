@@ -1,4 +1,4 @@
-#question {
+.question {
     background-color: #10162F;
     display: flex;
     flex-direction: column;
@@ -9,6 +9,22 @@
     text-align: justify;
   }
 
+  #questionList {
+    text-align: center;
+  }
+
+  .questionCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .questionControls {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
 
   @media only screen and (min-width:481px) and (max-width: 768px) {
     #question {

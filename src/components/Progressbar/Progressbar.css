@@ -27,16 +27,6 @@ footer #barContainer {
     text-align: right;
 }
 
-footer button {
-    cursor: pointer;
-    background-color: #FFD300;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 10px;
-    margin-right: 30px;
-    font-weight: bold;
-}
-
 .light-grey {
     margin-top: 4px;
     border-radius: 10px;
