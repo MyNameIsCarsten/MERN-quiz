@@ -6,6 +6,7 @@ const Navbar = () => {
     <div data-testid='navbar'>
       <nav>
         <Link to="">Home</Link>
+        <Link to="/quiz/add">Add Quiz</Link>
         <Link to="/quiz">Quiz List</Link>
       </nav>
     </div>
