@@ -6,7 +6,7 @@ import { selectAnswer, updateUserIsRight } from '../../App/appSlice';
 
 const Answers = () => {
     const curQuestion = useSelector((state) => state.app.currentQuestion);
-    const answers = useSelector((state) => state.quiz);
+    const answers = useSelector((state) => state.quiz.data);
     const curAnswers = answers[curQuestion].answers
     const dispatch = useDispatch();
   
