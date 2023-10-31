@@ -10,6 +10,7 @@ export const appSlice = createSlice({
         correctAnswers: 0,
         totalAnswers: 0,
         isCompleted: false,
+        isStarted: false,
     },
     reducers: {
         selectAnswer:(state, action) =>{
@@ -33,6 +34,7 @@ export const appSlice = createSlice({
         }, 
         toggleCompleted:(state, action) =>{
             state.isCompleted = true;
+            state.isStarted = false;
         },
         reset:(state, action) =>{
             state.hasSelected = false;
@@ -43,8 +45,12 @@ export const appSlice = createSlice({
             state.totalAnswers = 0;
             state.isCompleted = false;
         },
+        start:(state, action) =>{
+            state.isStarted = true;
+            state.isCompleted = false;
+        },
     },
 });
 
 export default appSlice.reducer;
-export const { selectAnswer, updateUserIsRight, nextQuestion, toggleSelected, toggleCompleted, reset} = appSlice.actions
+export const { selectAnswer, updateUserIsRight, nextQuestion, toggleSelected, toggleCompleted, reset, start} = appSlice.actions

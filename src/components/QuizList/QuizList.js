@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import '../Question/Question.css';
 import { deleteQuestion, fetchQuiz } from '../Quiz/quizSlice';
+import { Link } from 'react-router-dom';
 
 const QuizList = () => {
     const dispatch = useDispatch();
@@ -20,17 +21,19 @@ const QuizList = () => {
     };
 
   return (
-    <div>
+    <div style={{backgroundColor: '#10162F'}}>
         <h2 id='questionList'>Question List:</h2>
-      {Object.keys(questions).map((q, i) => 
-        <div key={i} className='questionCard'>
-            <p className='question'>{questions[q].question}</p>
-            <div className='questionControls'>
-                <p>Edit</p>
-                <button onClick={() => handleDelete(i)}>Delete</button>
-            </div>     
-        </div>
-        )}
+        {Object.keys(questions).map((q, i) => 
+            <div key={i} className='questionCard'>
+                <p className='question'>{questions[q].question}</p>
+                <div className='questionControls'>
+                    <button>
+                        <Link to={`/quiz/edit/${i}`}>Edit</Link>
+                    </button>
+                    <button onClick={() => handleDelete(i)}>Delete</button>
+                </div>     
+            </div>
+            )}
     </div>
   )
 }

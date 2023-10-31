@@ -1,13 +1,18 @@
 import './Progressbar.css';
-import { nextQuestion } from '../../App/appSlice';
+import { nextQuestion, start } from '../../App/appSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleCompleted } from '../../App/appSlice';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Progressbar = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const hasSelected = useSelector((state) => state.app.hasSelected)
   const quiz = useSelector((state)=>state.quiz.data)
   const curQuestion = useSelector((state)=>state.app.currentQuestion)
+  const isCompleted =  useSelector((state)=>state.app.isCompleted)
+  const isStarted = useSelector((state)=> state.app.isStarted)
 
   function clickHandler() {
     if(curQuestion + 1 <= quiz.length - 1){
@@ -15,6 +20,11 @@ const Progressbar = () => {
     } else {
       dispatch(toggleCompleted());
     }
+  }
+
+  function startHandler() {
+    dispatch(start());
+    navigate('/');
   }
 
   function calculateProgress() {
@@ -31,7 +41,7 @@ const Progressbar = () => {
 
   return (
     <div data-testid='progressbar'>
-      <footer>
+      {isStarted ? <footer>
         <div id='emptyProgress'></div>
         <div id='barContainer'>
           <div>{curQuestion + 1}/{quiz.length} Progressbar</div>
@@ -41,9 +51,16 @@ const Progressbar = () => {
         </div>
         
         <div id='buttonContainer'>
-          <button data-testid='next' onClick={clickHandler} disabled={!hasSelected}>Next</button>
+          <button data-testid='next' onClick={clickHandler} disabled={!hasSelected} style={{marginRight: 30}}>Next</button>
         </div>
       </footer>
+      :
+      <footer>
+        <button onClick={startHandler}>
+            <Link to='/'>{isCompleted ? 'Restart Quiz' : 'Start Quiz'}</Link>
+        </button>
+      </footer>  
+      }
     </div>
   )
 }

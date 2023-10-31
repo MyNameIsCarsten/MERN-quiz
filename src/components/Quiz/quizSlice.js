@@ -23,12 +23,42 @@ export const deleteQuestion = createAsyncThunk('quiz/delete', async (id) => {
     return data;
 });
 
+export const addQuestion = createAsyncThunk('quiz/add', async (arg) => {
+    const res = await fetch(`http://127.0.0.1:9000/api/quiz/add`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(arg)
+    });
+    if(!res.ok){
+        throw new Error('Anfrage fehlgeschlagen');
+    }
+    const data = await res.json();
+    return data;
+});
+
+export const updateQuestion = createAsyncThunk('quiz/update', async ({id, arg}) => {
+    const res = await fetch(`http://127.0.0.1:9000/api/quiz/edit/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify(arg)
+    });
+    if(!res.ok){
+        throw new Error('Anfrage fehlgeschlagen');
+    }
+    const data = await res.json();
+    return data;
+});
+
 export const quizSlice = createSlice({
     name: 'quiz',
     initialState: {
         isLoading: false,
         data: [],
-        isError: false
+        isError: false,
     },
     reducers: {},
     extraReducers: (builder) => {
@@ -52,6 +82,32 @@ export const quizSlice = createSlice({
             // You can update your state as needed after a successful delete
         });
         builder.addCase(deleteQuestion.rejected, (state) => {
+            state.isLoading = false;
+            state.isError = true; // Set isError to true on delete error
+        });
+        builder.addCase(addQuestion.pending, (state) => {
+            state.isLoading = true;
+            state.isError = false; // Reset isError when a delete request starts
+        });
+        builder.addCase(addQuestion.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.data.push(action.payload);
+            // You can update your state as needed after a successful delete
+        });
+        builder.addCase(addQuestion.rejected, (state) => {
+            state.isLoading = false;
+            state.isError = true; // Set isError to true on delete error
+        });
+        builder.addCase(updateQuestion.pending, (state) => {
+            state.isLoading = true;
+            state.isError = false; // Reset isError when a delete request starts
+        });
+        builder.addCase(updateQuestion.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.data = action.payload;
+            // You can update your state as needed after a successful delete
+        });
+        builder.addCase(updateQuestion.rejected, (state) => {
             state.isLoading = false;
             state.isError = true; // Set isError to true on delete error
         });

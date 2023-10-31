@@ -6,14 +6,15 @@ import Summary from '../components/Summary/Summary';
 import { useEffect } from 'react';
 import { fetchQuiz } from '../components/Quiz/quizSlice';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Quiz from '../components/Quiz/Quiz.js';
+import Quiz from '../components/Quiz/quiz.js';
 import QuizList from '../components/QuizList/QuizList';
+import QuizForm from '../components/QuizForm/QuizForm';
 
 
 function App() {
   const dispatch = useDispatch();
-  const isCompleted = useSelector((state) => state.app.isCompleted)
-  const isLoading = useSelector((state) => state.quiz.isLoading)
+  const isCompleted = useSelector((state) => state.app.isCompleted);
+  const isLoading = useSelector((state) => state.quiz.isLoading);
   const quiz = useSelector((state) => state.quiz.data)
 
   useEffect(()=> {
@@ -30,13 +31,16 @@ function App() {
               <Routes>
                 <Route exact path="/" element={<Quiz/>} />
                 <Route path="/quiz" element={<QuizList/>} />
+                <Route path="/quiz/add" element={<QuizForm/>} />
+                <Route path="/quiz/edit/:id" element={<QuizForm/>} />
               </Routes>
             </div>
           ) : (
             <p id="loading">Loading</p>
           )}
-        </Router>
         <Progressbar />
+        </Router>
+        
       </div>
     );
   } else {
@@ -44,8 +48,15 @@ function App() {
       <div className="App">
         <Router>
           <Navbar />
-          <Summary />
+          <Routes>
+              <Route exact path="/" element={<Summary />} />
+              <Route path="/quiz" element={<QuizList/>} />
+              <Route path="/quiz/add" element={<QuizForm/>} />
+              <Route path="/quiz/edit/:id" element={<QuizForm/>} />
+            </Routes>
+            <Progressbar />
         </Router>
+        
       </div>
     );
   }
