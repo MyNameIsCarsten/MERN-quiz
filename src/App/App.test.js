@@ -3,6 +3,6 @@ import App from './App';
 
 test('renders question', () => {
   render(<App />);
-  const linkElement = screen.getByText(/question/i);
+  const linkElement = screen.getByTestId('question');
   expect(linkElement).toBeInTheDocument();
 });
