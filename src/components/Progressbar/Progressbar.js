@@ -6,7 +6,7 @@ import { toggleCompleted } from '../../App/appSlice';
 const Progressbar = () => {
   const dispatch = useDispatch();
   const hasSelected = useSelector((state) => state.app.hasSelected)
-  const quiz = useSelector((state)=>state.quiz)
+  const quiz = useSelector((state)=>state.quiz.data)
   const curQuestion = useSelector((state)=>state.app.currentQuestion)
 
   function clickHandler() {
