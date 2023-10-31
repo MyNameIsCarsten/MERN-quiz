@@ -6,7 +6,7 @@ const Question = () => {
   const curQuestion = useSelector((state) => state.quiz.data[curQuestionIndex].question)
 
   return (
-    <div data-testid='question' id='question'>
+    <div data-testid='question' className='question'>
         <p>{curQuestion}</p>
     </div>
   )

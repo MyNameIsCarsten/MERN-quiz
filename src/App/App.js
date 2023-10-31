@@ -1,17 +1,19 @@
 import { useDispatch, useSelector } from 'react-redux';
-import Answers from '../components/Answers/Answers';
 import Navbar from '../components/Navbar/Navbar';
 import Progressbar from '../components/Progressbar/Progressbar';
-import Question from '../components/Question/Question';
 import './App.css';
 import Summary from '../components/Summary/Summary';
 import { useEffect } from 'react';
 import { fetchQuiz } from '../components/Quiz/quizSlice';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Quiz from '../components/Quiz/Quiz.js';
+import QuizList from '../components/QuizList/QuizList';
+
 
 function App() {
   const dispatch = useDispatch();
   const isCompleted = useSelector((state) => state.app.isCompleted)
-  const isError = useSelector((state) => state.quiz.isError)
+  const isLoading = useSelector((state) => state.quiz.isLoading)
   const quiz = useSelector((state) => state.quiz.data)
 
   useEffect(()=> {
@@ -21,23 +23,29 @@ function App() {
   if(!isCompleted){
     return (
       <div className="App">
-        <Navbar />
-        {!isError && quiz.length > 0 ? 
-          <div style={{overflow: 'auto'}}>
-            <Question />
-            <Answers />
-          </div>
-          :
-          <p id='loading'>Loading</p>
-        }
+        <Router> {/* Wrap your entire app with the Router component */}
+          <Navbar />
+          {!isLoading && quiz.length > 0 ? (
+            <div style={{ overflow: 'auto' }}>
+              <Routes>
+                <Route exact path="/" element={<Quiz/>} />
+                <Route path="/quiz" element={<QuizList/>} />
+              </Routes>
+            </div>
+          ) : (
+            <p id="loading">Loading</p>
+          )}
+        </Router>
         <Progressbar />
       </div>
     );
   } else {
     return (
       <div className="App">
-        <Navbar />
-        <Summary />
+        <Router>
+          <Navbar />
+          <Summary />
+        </Router>
       </div>
     );
   }
