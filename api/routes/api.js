@@ -1,5 +1,10 @@
+require("./loadEnvironment.js");
+
 const express = require('express');
 const testApiRouter = express.Router();
+
+const connectToDatabase = require("./db/conn.js");
+
 
 const quiz = [
     {
@@ -62,9 +67,17 @@ testApiRouter.param('id', (req, res, next, id) => {
       }
     });
 
-testApiRouter.get('/', (req, res, next) => {
+testApiRouter.get('/', async (req, res, next) => {
+    const db = await connectToDatabase();
+    let collection = await db.collection("users");
+    let results = await collection.find({username: "carsten"})
+      .limit(50)
+      .toArray();
+    console.log(results[0].username);
+
     res.send(quiz)
 });
+
 
 testApiRouter.delete('/quiz/:id', (req, res, next) => {
     if (req.id >= 0 && req.id < quiz.length) {
