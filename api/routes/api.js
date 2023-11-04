@@ -2,9 +2,115 @@ require("./loadEnvironment.js");
 
 const express = require('express');
 const testApiRouter = express.Router();
+const session = require("express-session");
+const store = new session.MemoryStore();
 
 const connectToDatabase = require("./db/conn.js");
+const { ObjectId } = require('mongodb');
 
+testApiRouter.use(express.json());
+testApiRouter.use(express.urlencoded({ extended: false }));
+
+const passport = require("passport");
+// importing passport-local package with its Strategy instance
+// to authenticate users with a username and passwor
+const LocalStrategy = require("passport-local").Strategy;
+
+testApiRouter.use(
+  session({
+    secret: "f4z4gs$Gcg",
+    cookie: { maxAge: 300000000, secure: false },
+    saveUninitialized: false,
+    resave: false,
+    store,
+  })
+);
+
+// Add the middleware to initialize the passport library
+testApiRouter.use(passport.initialize());
+
+// Add the middleware to implement a session with passport below:
+testApiRouter.use(passport.session());
+
+passport.use(new LocalStrategy(
+  async (username, password, done) => {
+    try {
+      // Connect to the MongoDB database
+      const db = await connectToDatabase();
+      const usersCollection = db.collection('users');
+
+      // Find the user by username
+      // username = 'carsten'
+      // password = 'new'
+      const user = await usersCollection.findOne({ username: username });
+
+      // Close the database connection
+      //client.close();
+
+      if (!user) {
+        // If user not found, return null and false in the callback
+        return done(null, false);
+      }
+
+      // Check if the password is valid
+      if (user.password !== password) {
+        // If user found but the password is not valid, return null and false in the callback
+        return done(null, false);
+      }
+
+      // If user found and password is valid, return the user object in the callback
+      return done(null, user);
+    } catch (err) {
+      return done(err);
+    }
+  }
+));
+
+testApiRouter.post('/login', (req, res, next) => {
+  console.log(req.body)
+  // initiates the local authentication strategy
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json({ message: 'Authentication failed' });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return res.status(200).json({ message: 'Authentication successful', user });
+    });
+  })(req, res, next);
+});
+
+// pass a user object and a callback function called done after successful authentication
+passport.serializeUser((user, done) => {
+  // done(error object, value to be stored)
+  done(null, user._id);
+});
+
+// user object can be retrieved from the session
+// pass the key that was used when we initially serialized a user (id)
+passport.deserializeUser(async (id, done) => {
+  try {
+    const db = await connectToDatabase();
+    const usersCollection = db.collection('users');
+
+    // Find the user by their unique identifier (typically ObjectId in MongoDB)
+    const user = await usersCollection.findOne({ _id: ObjectId(id) });
+
+    if (!user) {
+      return done(null, false); // User not found
+    }
+
+    // If the user is found, return the user object
+    return done(null, user);
+  } catch (err) {
+    return done(err);
+  }
+});
 
 const quiz = [
     {
