@@ -1,8 +1,30 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+
+export const login = createAsyncThunk('app/login', async ({username, password}) => {
+    console.log('Thunk login is executed')
+    const res = await fetch('http://localhost:9000/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password
+      }),
+    })
+    if(!res.ok){
+        throw new Error('Anfrage fehlgeschlagen');
+    }
+    const data = await res.json();
+    return data;
+});
 
 export const appSlice = createSlice({
     name: 'app',
     initialState: {
+        isLoggedIn: false,
+        isLoading: false,
+        isError: false,
         hasSelected: false,
         selectedAnswer: null,
         currentQuestion: 0,
@@ -50,6 +72,19 @@ export const appSlice = createSlice({
             state.isCompleted = false;
         },
     },
+    extraReducers: (builder) => {
+        builder.addCase(login.pending, (state, action) => {
+            state.isLoading = true;
+            state.isError = false;
+        })
+        builder.addCase(login.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isLoggedIn = true;
+        })
+        builder.addCase(login.rejected, (state, action) => {
+            state.isError = true;
+        })
+    }
 });
 
 export default appSlice.reducer;

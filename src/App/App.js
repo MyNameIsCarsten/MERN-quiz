@@ -9,11 +9,13 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Quiz from '../components/Quiz/quiz.js';
 import QuizList from '../components/QuizList/QuizList';
 import QuizForm from '../components/QuizForm/QuizForm';
+import Login from '../components/Login/Login.js';
 
 
 function App() {
   const dispatch = useDispatch();
   const isCompleted = useSelector((state) => state.app.isCompleted);
+  const isLoggedIn = useSelector((state) => state.app.isLoggedIn);
   const isLoading = useSelector((state) => state.quiz.isLoading);
   const quiz = useSelector((state) => state.quiz.data)
 
@@ -21,7 +23,7 @@ function App() {
     dispatch(fetchQuiz())
   }, [dispatch])
 
-  if(!isCompleted){
+  if(!isCompleted && isLoggedIn){
     return (
       <div className="App">
         <Router> {/* Wrap your entire app with the Router component */}
@@ -33,6 +35,7 @@ function App() {
                 <Route path="/quiz" element={<QuizList/>} />
                 <Route path="/quiz/add" element={<QuizForm/>} />
                 <Route path="/quiz/edit/:id" element={<QuizForm/>} />
+                <Route path='/login' element={<Login />} />
               </Routes>
             </div>
           ) : (
@@ -43,7 +46,27 @@ function App() {
         
       </div>
     );
-  } else {
+  } else if (!isLoggedIn) {
+    return (
+      <div className="App">
+        <Router> {/* Wrap your entire app with the Router component */}
+          <Navbar />
+          {!isLoading && quiz.length > 0 ? (
+            <div style={{ overflow: 'auto' }}>
+              <Routes>
+                <Route exact path="/" element={<Login/>} />
+                <Route path='/login' element={<Login />} />
+              </Routes>
+            </div>
+          ) : (
+            <p id="loading">Loading</p>
+          )}
+        <Progressbar />
+        </Router>
+        
+      </div>
+    );
+  }else {
     return (
       <div className="App">
         <Router>
