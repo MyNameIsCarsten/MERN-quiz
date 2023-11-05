@@ -40,7 +40,7 @@ const Login = () => {
             <button type="submit" id="submitBttn" >Login</button>
         </form>
         :
-        <p id="loading" style={{ display:'flex', justifyContent:'center' }}>Whait while you are being logged in.</p>
+        <p id="loading" style={{ display:'flex', justifyContent:'center' }}>Please wait while you are being logged in.</p>
         }
     </div>
   )
