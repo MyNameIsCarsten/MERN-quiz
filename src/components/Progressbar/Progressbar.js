@@ -13,6 +13,8 @@ const Progressbar = () => {
   const curQuestion = useSelector((state)=>state.app.currentQuestion)
   const isCompleted =  useSelector((state)=>state.app.isCompleted)
   const isStarted = useSelector((state)=> state.app.isStarted)
+  const isLoggedIn = useSelector((state) => state.app.isLoggedIn);
+  console.log('isLoggedIn: ', isLoggedIn)
 
   function clickHandler() {
     if(curQuestion + 1 <= quiz.length - 1){
@@ -56,8 +58,8 @@ const Progressbar = () => {
       </footer>
       :
       <footer>
-        <button onClick={startHandler}>
-            <Link to='/'>{isCompleted ? 'Restart Quiz' : 'Start Quiz'}</Link>
+        <button onClick={startHandler} style={{ display: isLoggedIn ? 'block' : 'none' }}>
+          <Link to='/'>{isCompleted ? 'Restart Quiz' : 'Start Quiz'}</Link>
         </button>
       </footer>  
       }

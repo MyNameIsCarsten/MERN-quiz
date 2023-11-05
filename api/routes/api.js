@@ -16,15 +16,31 @@ const passport = require("passport");
 // to authenticate users with a username and passwor
 const LocalStrategy = require("passport-local").Strategy;
 
+// generate unique session
 testApiRouter.use(
   session({
+    // key used for signing and/or encrypting cookies in order to protect our session ID
+    // random string should be stored securely in an environment variable, not in the code
     secret: "f4z4gs$Gcg",
+    // cookie that stores the session ID
     cookie: { maxAge: 300000000, secure: false },
+    // if true, server will store every new session, even if there are no changes to the session object
     saveUninitialized: false,
+    // if true, force a session to be saved back to the session data store, even when no data was modified
     resave: false,
     store,
   })
 );
+
+const isLoggedIn = (req, res, next) => {
+  if(!req.session.passport){
+    res.redirect('/login')
+  } else {
+    next();
+  }
+};
+
+testApiRouter.get(isLoggedIn);
 
 // Add the middleware to initialize the passport library
 testApiRouter.use(passport.initialize());
@@ -40,8 +56,6 @@ passport.use(new LocalStrategy(
       const usersCollection = db.collection('users');
 
       // Find the user by username
-      // username = 'carsten'
-      // password = 'new'
       const user = await usersCollection.findOne({ username: username });
 
       // Close the database connection
@@ -66,29 +80,12 @@ passport.use(new LocalStrategy(
   }
 ));
 
-testApiRouter.post('/login', (req, res, next) => {
-  console.log(req.body)
-  // initiates the local authentication strategy
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.status(401).json({ message: 'Authentication failed' });
-    }
-    req.logIn(user, (err) => {
-      if (err) {
-        return next(err);
-      }
-      return res.status(200).json({ message: 'Authentication successful', user });
-    });
-  })(req, res, next);
-});
-
+// Serializing a user determines which data of the user object should be stored in the session
 // pass a user object and a callback function called done after successful authentication
 passport.serializeUser((user, done) => {
   // done(error object, value to be stored)
   done(null, user._id);
+  // stores it internally on req.session.passport
 });
 
 // user object can be retrieved from the session
@@ -111,6 +108,33 @@ passport.deserializeUser(async (id, done) => {
     return done(err);
   }
 });
+
+testApiRouter.post('/login', (req, res, next) => {
+  console.log('req.body from POST to /login', req.body)
+  // initiates the local authentication strategy
+  passport.authenticate('local', (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json({ message: 'Authentication failed' });
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return res.status(200).json({ message: 'Authentication successful', user });
+    });
+  })(req, res, next);
+});
+
+testApiRouter.post(
+  "/login",
+  passport.authenticate("local", { failureRedirect: "/login" }),
+  (req, res) => {
+    res.redirect("/");
+  }
+);
 
 const quiz = [
     {
@@ -174,6 +198,7 @@ testApiRouter.param('id', (req, res, next, id) => {
     });
 
 testApiRouter.get('/', async (req, res, next) => {
+    console.log('req.session.passport: ', req.session.passport)
     const db = await connectToDatabase();
     let collection = await db.collection("users");
     let results = await collection.find({username: "carsten"})
