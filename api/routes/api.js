@@ -58,6 +58,9 @@ passport.use(new LocalStrategy(
       // Find the user by username
       const user = await usersCollection.findOne({ username: username });
 
+      // close connection to database
+      db.client.close();
+
       // Close the database connection
       //client.close();
 
@@ -97,6 +100,9 @@ passport.deserializeUser(async (id, done) => {
 
     // Find the user by their unique identifier (typically ObjectId in MongoDB)
     const user = await usersCollection.findOne({ _id: ObjectId(id) });
+
+    // close connection to database
+    db.client.close();
 
     if (!user) {
       return done(null, false); // User not found
@@ -200,13 +206,16 @@ testApiRouter.param('id', (req, res, next, id) => {
 testApiRouter.get('/', async (req, res, next) => {
     console.log('req.session.passport: ', req.session.passport)
     const db = await connectToDatabase();
-    let collection = await db.collection("users");
-    let results = await collection.find({username: "carsten"})
-      .limit(50)
-      .toArray();
-    console.log(results[0].username);
+    // let collection = await db.collection("users");
+    let quizCollection = await db.collection("quiz");
+    let quizData = await quizCollection.find({}).toArray();
+    // let results = await collection.find({username: "carsten"})
+    //   .limit(50)
+    //   .toArray();
+    // close connection to database
+    db.client.close();
 
-    res.send(quiz)
+    res.send(quizData)
 });
 
 
