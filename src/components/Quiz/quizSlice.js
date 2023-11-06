@@ -10,7 +10,8 @@ export const fetchQuiz = createAsyncThunk('quiz/fetch', async () => {
 });
 
 export const deleteQuestion = createAsyncThunk('quiz/delete', async (id) => {
-    const res = await fetch(`http://127.0.0.1:9000/api/quiz/${id}`, {
+    console.log('Id in quizSlice: ', id)
+    const res = await fetch(`http://localhost:9000/api/quiz/${id}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'

@@ -30,7 +30,7 @@ const QuizList = () => {
                     <button>
                         <Link to={`/quiz/edit/${i}`}>Edit</Link>
                     </button>
-                    <button onClick={() => handleDelete(i)}>Delete</button>
+                    <button onClick={() => handleDelete(questions[q]._id)}>Delete</button>
                 </div>     
             </div>
             )}
