@@ -1,4 +1,5 @@
 const { MongoClient } = require("mongodb");
+require("../loadEnvironment.js");
 
 const connectionString = process.env.ATLAS_URI || "";
 
