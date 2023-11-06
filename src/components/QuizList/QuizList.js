@@ -28,7 +28,7 @@ const QuizList = () => {
                 <p className='question'>{questions[q].question}</p>
                 <div className='questionControls'>
                     <button>
-                        <Link to={`/quiz/edit/${i}`}>Edit</Link>
+                        <Link to={`/quiz/edit/${questions[q]._id}`}>Edit</Link>
                     </button>
                     <button onClick={() => handleDelete(questions[q]._id)}>Delete</button>
                 </div>     
