@@ -137,6 +137,7 @@ testApiRouter.post('/login', (req, res, next) => {
       if (err) {
         return next(err);
       }
+      // return user data to the client
       return res.status(200).json({ message: 'Authentication successful', user });
     });
   })(req, res, next);
