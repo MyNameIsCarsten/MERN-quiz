@@ -1,15 +1,21 @@
 import { useDispatch, useSelector } from 'react-redux';
-import Navbar from '../components/Navbar/Navbar';
-import Progressbar from '../components/Progressbar/Progressbar';
 import './App.css';
-import Summary from '../components/Summary/Summary';
-import { useEffect } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import { fetchQuiz } from '../components/Quiz/quizSlice';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import Quiz from '../components/Quiz/quiz.js';
-import QuizList from '../components/QuizList/QuizList';
-import QuizForm from '../components/QuizForm/QuizForm';
+
+import Navbar from '../components/Navbar/Navbar';
+// import Summary from '../components/Summary/Summary';
+// import Quiz from '../components/Quiz/quiz.js';
+// import QuizList from '../components/QuizList/QuizList';
+// import QuizForm from '../components/QuizForm/QuizForm';
 import Login from '../components/Login/Login.js';
+// import Progressbar from '../components/Progressbar/Progressbar';
+const Progressbar = lazy(() => import('../components/Progressbar/Progressbar'));
+const Summary = lazy(() => import('../components/Summary/Summary'));
+const Quiz = lazy(() => import('../components/Quiz/quiz'));
+const QuizList = lazy(() => import('../components/QuizList/QuizList'));
+const QuizForm = lazy(() => import('../components/QuizForm/QuizForm'));
 
 
 function App() {
@@ -36,22 +42,45 @@ function App() {
               <Routes>
                 {user === 'admin' ? 
                 <>
-                  <Route exact path="/" element={<Quiz/>} />
-                  <Route path="/quiz" element={<QuizList/>} />
-                  <Route path="/quiz/add" element={<QuizForm/>} />
-                  <Route path="/quiz/edit/:id" element={<QuizForm/>} />
-                  <Route
-                    path="/login"
-                    element={<Navigate to="/" />}
-                  />
+                  <Route exact path="/" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <Quiz />
+                    </Suspense>
+                  } />
+                  <Route path="/quiz" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <QuizList />
+                    </Suspense>
+                  } />
+                  <Route path="/quiz/add" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <QuizForm />
+                    </Suspense>
+                  } />
+                  <Route path="/quiz/edit/:id" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <QuizForm />
+                    </Suspense>
+                  } />
+                  <Route path="/login" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <Navigate to="/" />
+                    </Suspense>
+                  } />
                 </>
                 :
                 <>
-                  <Route exact path="/" element={<Quiz/>} />
-                  <Route
-                    path="/login"
-                    element={<Navigate to="/" />}
-                  />
+                  <Route exact path="/" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <Quiz />
+                    </Suspense>
+                  } />
+
+                  <Route path="/login" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <Navigate to="/" />
+                    </Suspense>
+                  } />
                 </>
               }
               </Routes>
@@ -59,7 +88,9 @@ function App() {
           ) : (
             <p id="loading">Loading</p>
           )}
-        <Progressbar />
+        <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+          <Progressbar />
+        </Suspense>
         </Router>
         
       </div>
@@ -71,21 +102,33 @@ function App() {
           <Navbar />
             <div style={{ overflow: 'auto' }}>
               <Routes>
-                <Route exact path="/" element={<Login/>} />
-                <Route path='/login' element={<Login />} />
+              <Route exact path="/login" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <Login />
+                    </Suspense>
+                  } />
+                <Route path="/" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <Navigate to="/login" />
+                    </Suspense>
+                  } />
                 <Route
                   path="/*"
                   element={
                     isLoading && quiz.length === 0 ? (
                       <p id="loading">Loading</p>
                     ) : (
-                      <Navigate to="/login" />
+                      <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                        <Navigate to="/" />
+                      </Suspense>
                     )
                   }
                 />
               </Routes>
             </div>
-        <Progressbar />
+        <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+          <Progressbar />
+        </Suspense>
         </Router>
         
       </div>
@@ -96,12 +139,32 @@ function App() {
         <Router>
           <Navbar />
           <Routes>
-              <Route exact path="/" element={<Summary />} />
-              <Route path="/quiz" element={<QuizList/>} />
-              <Route path="/quiz/add" element={<QuizForm/>} />
-              <Route path="/quiz/edit/:id" element={<QuizForm/>} />
+              
+              <Route exact path="/" element={
+                <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                  <Summary />
+                </Suspense>
+              } />
+              
+              <Route path="/quiz" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <QuizList />
+                    </Suspense>
+                  } />
+              <Route path="/quiz/add" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <QuizForm />
+                    </Suspense>
+                  } />
+              <Route path="/quiz/edit/:id" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <QuizForm />
+                    </Suspense>
+                  } />
             </Routes>
-            <Progressbar />
+            <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+              <Progressbar />
+            </Suspense>
         </Router>
         
       </div>

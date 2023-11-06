@@ -30,4 +30,36 @@ button a {
 }
 
 
+input[type=text] {
+  border-radius: 40px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+input[type=password] {
+  border-radius: 40px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+textarea {
+  padding: 5px;
+  margin: 5px;
+}
+
+textarea:focus-visible {
+  outline: none;
+  outline-offset: 1px;
+}
+
+input[type=text]:focus-visible {
+  outline: none;
+  outline-offset: 1px;
+}
+
+input[type=password]:focus-visible {
+  outline: none;
+  outline-offset: 1px;
+}
+
 

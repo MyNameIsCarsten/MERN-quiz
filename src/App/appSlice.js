@@ -97,6 +97,16 @@ export const appSlice = createSlice({
         builder.addCase(login.pending, (state, action) => {
             state.isLoading = true;
             state.isError = false;
+            state.hasSelected = false;
+            state.selectedAnswer = null;
+            state.currentQuestion = 0;
+            state.userIsRight = null;
+            state.correctAnswers = 0;
+            state.totalAnswers = 0;
+            state.isCompleted = false;
+            state.isStarted = false;
+            state.errorMessage = '';
+
         })
         builder.addCase(login.fulfilled, (state, action) => {
             state.isLoading = false;
