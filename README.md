@@ -14,7 +14,6 @@ This is a full-stack MERN (MongoDB, Express, React, Node.js) quiz application th
 
 ## Features
 
-- User authentication with JWT (JSON Web Tokens).
 - Create, edit, and delete quizzes.
 - Take quizzes with multiple-choice questions.
 - Real-time scoring and immediate feedback on quiz results.
@@ -28,6 +27,7 @@ This is a full-stack MERN (MongoDB, Express, React, Node.js) quiz application th
   - React Router for routing
   - Fetch for making API requests
   - State management using Redux
+  - Lazy Loading + Suspense
 
 - **Backend:**
   - Node.js
