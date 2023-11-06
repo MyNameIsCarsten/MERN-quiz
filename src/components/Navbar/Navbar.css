@@ -17,5 +17,16 @@ nav a {
 nav a:hover {
     text-decoration: underline;
     color: white;
-    font-weight: bold;
+}
+
+#logoutBtn {
+    background-color: transparent;
+    color: white;
+    font-weight: normal;
+    font-size: medium;
+}
+
+#logoutBtn:hover {
+    text-decoration: underline;
+    color: white;
 }

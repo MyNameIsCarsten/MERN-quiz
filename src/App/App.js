@@ -5,7 +5,7 @@ import './App.css';
 import Summary from '../components/Summary/Summary';
 import { useEffect } from 'react';
 import { fetchQuiz } from '../components/Quiz/quizSlice';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Quiz from '../components/Quiz/quiz.js';
 import QuizList from '../components/QuizList/QuizList';
 import QuizForm from '../components/QuizForm/QuizForm';
@@ -19,9 +19,11 @@ function App() {
   const isLoading = useSelector((state) => state.quiz.isLoading);
   const quiz = useSelector((state) => state.quiz.data)
 
-  useEffect(()=> {
-    dispatch(fetchQuiz())
-  }, [dispatch])
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(fetchQuiz());
+    }
+  }, [dispatch, isLoggedIn]);
 
   if(!isCompleted && isLoggedIn){
     return (
@@ -35,7 +37,10 @@ function App() {
                 <Route path="/quiz" element={<QuizList/>} />
                 <Route path="/quiz/add" element={<QuizForm/>} />
                 <Route path="/quiz/edit/:id" element={<QuizForm/>} />
-                <Route path='/login' element={<Login />} />
+                <Route
+                  path="/login"
+                  element={<Navigate to="/" />}
+                />
               </Routes>
             </div>
           ) : (
@@ -51,16 +56,22 @@ function App() {
       <div className="App">
         <Router> {/* Wrap your entire app with the Router component */}
           <Navbar />
-          {!isLoading && quiz.length > 0 ? (
             <div style={{ overflow: 'auto' }}>
               <Routes>
                 <Route exact path="/" element={<Login/>} />
                 <Route path='/login' element={<Login />} />
+                <Route
+                  path="/*"
+                  element={
+                    isLoading && quiz.length === 0 ? (
+                      <p id="loading">Loading</p>
+                    ) : (
+                      <Navigate to="/login" />
+                    )
+                  }
+                />
               </Routes>
             </div>
-          ) : (
-            <p id="loading">Loading</p>
-          )}
         <Progressbar />
         </Router>
         

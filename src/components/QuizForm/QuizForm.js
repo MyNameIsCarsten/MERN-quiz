@@ -87,63 +87,73 @@ const QuizForm = () => {
         <h2>{id !== undefined ? 'Edit Question' : 'Add Question'}</h2>
         <form id="quizForm" onSubmit={handleSubmit}>
             <label htmlFor='question'>Question:</label>
-            <input
-                type="text"
+            <textarea
+                rows="4" 
+                cols="50"
                 id="question"
                 value={questionValue}
                 onChange={(e) => setQuestionValue(e.target.value)}
                 />
 
-            <label htmlFor='answer1'>Answer 1:</label>
-            <input 
-                type="text" 
-                id="answer1"  
-                value={answer1Value}
-                onChange={(e) => setAnswer1Value(e.target.value)} 
-                />
-            <select name="1isTrue" id="1isTrue" value={isTrue1Value} onChange={(e) => setIsTrue1Value(e.target.value === 'true')}>
-                <option value="false">False</option>
-                <option value="true">True</option>
-            </select>
+            <div className='answerDiv'>
+                <label htmlFor='answer1'>Answer 1:</label>
+                <input 
+                    type="text" 
+                    id="answer1"  
+                    value={answer1Value}
+                    onChange={(e) => setAnswer1Value(e.target.value)} 
+                    />
+                <select name="1isTrue" id="1isTrue" value={isTrue1Value} onChange={(e) => setIsTrue1Value(e.target.value === 'true')}>
+                    <option value="false">False</option>
+                    <option value="true">True</option>
+                </select>
+            </div>
 
-            <label htmlFor='answer2'>Answer 2:</label>
-            <input 
-                type="text" 
-                id="answer2"  
-                value={answer2Value}
-                onChange={(e) => setAnswer2Value(e.target.value)} 
-                />
-            <select name="2isTrue" id="2isTrue" value={isTrue2Value} onChange={(e) => setIsTrue2Value(e.target.value === 'true')}>
-                <option value="false">False</option>
-                <option value="true">True</option>
-            </select>
-
-            <label htmlFor='answer3'>Answer 3:</label>
-            <input 
-                type="text" 
-                id="answer3"  
-                value={answer3Value}
-                onChange={(e) => setAnswer3Value(e.target.value)} 
-                />
-            <select name="3isTrue" id="3isTrue" value={isTrue3Value} onChange={(e) => setIsTrue3Value(e.target.value === 'true')}>
-                <option value="false">False</option>
-                <option value="true">True</option>
-            </select>
-
-            <label htmlFor='answer4'>Answer 4:</label>
-            <input 
-                type="text" 
-                id="answer4"  
-                value={answer4Value}
-                onChange={(e) => setAnswer4Value(e.target.value)} 
-                />
-            <select name="4isTrue" id="4isTrue" value={isTrue4Value} onChange={(e) => setIsTrue4Value(e.target.value === 'true')}>
-                <option value="false">False</option>
-                <option value="true">True</option>
-            </select>
+            <div className='answerDiv'>
+                <label htmlFor='answer2'>Answer 2:</label>
+                <input 
+                    type="text" 
+                    id="answer2"  
+                    value={answer2Value}
+                    onChange={(e) => setAnswer2Value(e.target.value)} 
+                    />
+                <select name="2isTrue" id="2isTrue" value={isTrue2Value} onChange={(e) => setIsTrue2Value(e.target.value === 'true')}>
+                    <option value="false">False</option>
+                    <option value="true">True</option>
+                </select>
+            </div>
             
+            <div className='answerDiv'>
+                <label htmlFor='answer3'>Answer 3:</label>
+                <input 
+                    type="text" 
+                    id="answer3"  
+                    value={answer3Value}
+                    onChange={(e) => setAnswer3Value(e.target.value)} 
+                    />
+                <select name="3isTrue" id="3isTrue" value={isTrue3Value} onChange={(e) => setIsTrue3Value(e.target.value === 'true')}>
+                    <option value="false">False</option>
+                    <option value="true">True</option>
+                </select>
+            </div>
 
-            <button type="submit" id="submitBttn" >Submit</button>
+            <div className='answerDiv'>
+                <label htmlFor='answer4'>Answer 4:</label>
+                <input 
+                    type="text" 
+                    id="answer4"  
+                    value={answer4Value}
+                    onChange={(e) => setAnswer4Value(e.target.value)} 
+                    />
+                <select name="4isTrue" id="4isTrue" value={isTrue4Value} onChange={(e) => setIsTrue4Value(e.target.value === 'true')}>
+                    <option value="false">False</option>
+                    <option value="true">True</option>
+                </select>
+            </div>
+            <div className='bttnDiv'>
+                {id !== undefined ? (<button type="submit" id="backBttn" >Go Back</button>) : '' }
+                <button type="submit" id="submitBttn" >Submit</button>
+            </div>
         </form>
     </div>
   )

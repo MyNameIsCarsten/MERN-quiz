@@ -9,17 +9,23 @@ const Login = () => {
     const [ username, setUsername ] = useState('');
     const [ password, setPassword ] = useState('');
     const isLoading = useSelector((state) => state.app.isLoading);
+    const errorMessage = useSelector((state) => state.app.errorMessage);
 
     
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(login({username, password})) // sent POST request when form is submitted
+        if (username === '' || password ===''){
+          alert('Please enter a username and password.')
+        } else {
+          dispatch(login({username, password})) // sent POST request when form is submitted
+        }
     }
 
 
 
   return (
     <div>
+      <p id='error'>{errorMessage !== '' && !isLoading ? errorMessage : ''}</p>
       {!isLoading ? <form id="loginForm" onSubmit={handleSubmit}>
             <label htmlFor='username'>Username:</label>
             <input

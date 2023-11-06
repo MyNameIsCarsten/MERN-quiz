@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const login = createAsyncThunk('app/login', async ({username, password}) => {
-    console.log('Thunk login is executed')
     const res = await fetch('http://localhost:9000/api/login', {
       method: 'POST',
       headers: {
@@ -14,6 +13,20 @@ export const login = createAsyncThunk('app/login', async ({username, password}) 
     })
     if(!res.ok){
         throw new Error('Anfrage fehlgeschlagen');
+    }
+    const data = await res.json();
+    return data;
+});
+
+export const logout = createAsyncThunk('app/logout', async () => {
+    const res = await fetch('http://localhost:9000/api/logout', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    if(!res.ok){
+        throw new Error('Logout fehlgeschlagen');
     }
     const data = await res.json();
     return data;
@@ -33,6 +46,7 @@ export const appSlice = createSlice({
         totalAnswers: 0,
         isCompleted: false,
         isStarted: false,
+        errorMessage: ''
     },
     reducers: {
         selectAnswer:(state, action) =>{
@@ -80,9 +94,25 @@ export const appSlice = createSlice({
         builder.addCase(login.fulfilled, (state, action) => {
             state.isLoading = false;
             state.isLoggedIn = true;
+            state.errorMessage = '';
         })
         builder.addCase(login.rejected, (state, action) => {
             state.isError = true;
+            state.isLoading = false;
+            state.errorMessage = 'Verify that your username and password are correct.';
+        })
+        builder.addCase(logout.pending, (state, action) => {
+            state.isLoading = true;
+            state.isError = false;
+        })
+        builder.addCase(logout.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.isLoggedIn = false;
+        })
+        builder.addCase(logout.rejected, (state, action) => {
+            state.isError = true;
+            state.isLoading = false;
+            state.errorMessage = 'Logout was not possible.';
         })
     }
 });
