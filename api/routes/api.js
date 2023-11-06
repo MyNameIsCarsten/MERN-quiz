@@ -149,49 +149,49 @@ testApiRouter.post(
   }
 );
 
-const quiz = [
-    {
-    question: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-    answers: {
-        1:{
-            answer: 'Lorem ipsum',
-            isCorrect: true
-        },
-        2:{
-            answer: 'dolor sit amet',
-            isCorrect: false
-        },
-        3:{
-            answer: 'consetetur sadipscing elitr',
-            isCorrect: false
-        },
-        4:{
-            answer: 'sed diam nonumy',
-            isCorrect: false
-        },
-    }
-    },{
-    question: 'Question 2',
-    answers: {
-        1:{
-            answer: 'Hello World',
-            isCorrect: true
-        },
-        2:{
-            answer: 'Hello Universe',
-            isCorrect: false
-        },
-        3:{
-            answer: 'Hello City',
-            isCorrect: false
-        },
-        4:{
-            answer: 'Hello Country',
-            isCorrect: false
-        },
-    }
-    },
-]
+// const quiz = [
+//     {
+//     question: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
+//     answers: {
+//         1:{
+//             answer: 'Lorem ipsum',
+//             isCorrect: true
+//         },
+//         2:{
+//             answer: 'dolor sit amet',
+//             isCorrect: false
+//         },
+//         3:{
+//             answer: 'consetetur sadipscing elitr',
+//             isCorrect: false
+//         },
+//         4:{
+//             answer: 'sed diam nonumy',
+//             isCorrect: false
+//         },
+//     }
+//     },{
+//     question: 'Question 2',
+//     answers: {
+//         1:{
+//             answer: 'Hello World',
+//             isCorrect: true
+//         },
+//         2:{
+//             answer: 'Hello Universe',
+//             isCorrect: false
+//         },
+//         3:{
+//             answer: 'Hello City',
+//             isCorrect: false
+//         },
+//         4:{
+//             answer: 'Hello Country',
+//             isCorrect: false
+//         },
+//     }
+//     },
+// ]
 
 // testApiRouter.param('id', (req, res, next, id) => {
 //     const questionId = Number(id);
@@ -215,9 +215,8 @@ testApiRouter.get('/', async (req, res, next) => {
 
 
 testApiRouter.delete('/quiz/:id', async (req, res, next) => {
-  console.log('req.params: ', req.params);
   const questionId = req.params.id;
-  console.log('QuestionId: ', questionId);
+
   try {
     const db = await connectToDatabase();
     const quizCollection = db.collection("quiz");
@@ -249,35 +248,65 @@ testApiRouter.delete('/quiz/:id', async (req, res, next) => {
 // });
 
 
-testApiRouter.post('/quiz/add', (req, res, next) => {
-    const newQuestion = req.body;
+testApiRouter.post('/quiz/add', async (req, res, next) => {
+  const newQuestion = req.body;
+  const db = await connectToDatabase();
+  const quizCollection = db.collection("quiz");
+  
+  if (newQuestion) {
+    try {
+        const result = await quizCollection.insertOne(newQuestion);
+        db.client.close();
 
-    if(newQuestion){
-        quiz.push(newQuestion);
-        res.status(201).send(newQuestion);
-    } else {
-        res.status(400).send();
+        if (result.insertedId) {
+          
+            res.status(201).send(newQuestion);
+        } else {
+            res.status(500).send('Failed to insert the question');
+        }
+    } catch (error) {
+        db.client.close();
+        console.error(error);
+        res.status(500).send('Internal server error');
     }
+} else {
+    db.client.close();
+    res.status(400).send('Bad request');
+}
 });
 
-testApiRouter.put('/quiz/edit/:id', (req, res, next) => {
-    if (req.id >= 0 && req.id < quiz.length) {
-        // Check if the question ID is within the valid range
-        const editQuestion = quiz[req.id];
+testApiRouter.put('/quiz/edit/:id', async (req, res, next) => {
+    const db = await connectToDatabase();
+    const quizCollection = db.collection("quiz");
+    const questionId = req.params.id;
 
-        if (editQuestion) {
-            quiz[req.id] = req.body;
-          // Question successfully edited
-        //   res.status(200).json({ message: 'Question edited successfully', edited: quiz[req.id] });
-            res.status(200).send(quiz)
-        } else {
-          // Question not found
-          res.status(404).json({ message: 'Question not found' });
-        }
-      } else {
-        // Invalid question ID
-        res.status(400).json({ message: 'Invalid question ID' });
+    try {
+      // Check if the provided ID is a valid ObjectId
+      if (!ObjectId.isValid(questionId)) {
+        return res.status(400).json({ message: 'Invalid question ID' });
       }
-    });
+  
+      // Find the document to edit using the _id field
+      const question = await quizCollection.findOne({ _id: new ObjectId(questionId) });
+  
+      if (question) {
+        // Update the document with the new data
+        await quizCollection.updateOne({ _id: new ObjectId(questionId) }, { $set: req.body });
+  
+        // Question successfully edited
+        res.status(200).json({ message: 'Question edited successfully', edited: req.body });
+      } else {
+        // Question not found
+        res.status(404).json({ message: 'Question not found' });
+      }
+    } catch (error) {
+      // Handle any errors that occur during the process
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    } finally {
+      // Close the database connection
+      db.client.close();
+    }
+  });
 
 module.exports = testApiRouter;

@@ -13,9 +13,19 @@ const QuizForm = () => {
     if(id !== undefined){
         curQuestionIndex = id
     }
+    console.log('curQuestionIndex: ', curQuestionIndex)
     const quiz = useSelector((state) => state.quiz)
-    const answers = quiz.data[curQuestionIndex].answers
-    const curQuestion = quiz.data[curQuestionIndex].question
+
+    let questionIndex;
+    let answers;
+    let curQuestion;
+
+    if(id !== undefined){
+        questionIndex = quiz.data.findIndex((element) => element._id === curQuestionIndex)
+        answers = quiz.data[questionIndex].answers
+        curQuestion = quiz.data[questionIndex].question
+    } 
+    
 
     const [questionValue, setQuestionValue] = useState(id !== undefined ? curQuestion : '');
     const [answer1Value, setAnswer1Value] = useState(id !== undefined ? answers[1].answer : '');
@@ -37,22 +47,22 @@ const QuizForm = () => {
             alert('Only one answer can be true.')
         } else {
             const newQuestion = {
-                question: questionValue,
-                answers: {
+                'question': questionValue,
+                'answers': {
                     1: {
-                        answer: answer1Value,
-                        isCorrect: isTrue1Value
+                        'answer': answer1Value,
+                        'isCorrect': isTrue1Value
                     },
                     2: {
-                        answer: answer2Value,
+                        'answer': answer2Value,
                         isCorrect: isTrue2Value
                     },
                     3: {
-                        answer: answer3Value,
+                        'answer': answer3Value,
                         isCorrect: isTrue3Value
                     },
                     4: {
-                        answer: answer4Value,
+                        'answer': answer4Value,
                         isCorrect: isTrue4Value
                     },
                 }

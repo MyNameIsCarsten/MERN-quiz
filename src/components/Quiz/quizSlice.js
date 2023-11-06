@@ -105,7 +105,7 @@ export const quizSlice = createSlice({
         });
         builder.addCase(updateQuestion.fulfilled, (state, action) => {
             state.isLoading = false;
-            state.data = action.payload;
+            // state.data = action.payload;
             // You can update your state as needed after a successful delete
         });
         builder.addCase(updateQuestion.rejected, (state) => {
