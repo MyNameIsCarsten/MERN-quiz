@@ -39,15 +39,15 @@ testApiRouter.use(
   })
 );
 
-const isLoggedIn = (req, res, next) => {
-  if(!req.session.passport){
-    res.redirect('/login')
-  } else {
-    next();
-  }
-};
+// const isLoggedIn = (req, res, next) => {
+//   if(!req.session.passport){
+//     return res.redirect('/')
+//   } else {
+//     next();
+//   }
+// };
 
-testApiRouter.get(isLoggedIn);
+// testApiRouter.use(isLoggedIn);
 
 // Add the middleware to initialize the passport library
 testApiRouter.use(passport.initialize());
@@ -122,6 +122,7 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+
 testApiRouter.post('/login', (req, res, next) => {
   // console.log('req.body from POST to /login', req.body)
   // initiates the local authentication strategy
@@ -130,7 +131,7 @@ testApiRouter.post('/login', (req, res, next) => {
       return next(err);
     }
     if (!user) {
-      return res.status(401).json({ message: 'Authentication failed' });
+      return res.status(401).redirect('/login');
     }
     req.logIn(user, (err) => {
       if (err) {
@@ -148,6 +149,16 @@ testApiRouter.post(
     res.redirect("/");
   }
 );
+
+testApiRouter.get('/logout', (req, res) => {
+  req.logout((err) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error during logout' });
+    }
+    return res.status(200).json({ message: 'Logged out successfully' });
+  });
+});
+
 
 // const quiz = [
 //     {
