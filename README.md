@@ -98,6 +98,9 @@ Your MERN quiz app should now be up and running.
 
 2. Sign up and log in to create and manage quizzes.
 
+`username: admin, password: new`
+`username: user, password: new`
+
 3. Users can take quizzes created by others.
 
 4. Enjoy the quiz-taking and creation experience!

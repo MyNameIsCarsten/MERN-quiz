@@ -5,6 +5,7 @@ const testApiRouter = express.Router();
 const session = require("express-session");
 const store = new session.MemoryStore();
 const cors = require('cors');
+const bcrypt = require("bcrypt");
 
 const connectToDatabase = require("./db/conn.js");
 const { ObjectId } = require('mongodb');
@@ -39,15 +40,7 @@ testApiRouter.use(
   })
 );
 
-// const isLoggedIn = (req, res, next) => {
-//   if(!req.session.passport){
-//     return res.redirect('/')
-//   } else {
-//     next();
-//   }
-// };
 
-// testApiRouter.use(isLoggedIn);
 
 // Add the middleware to initialize the passport library
 testApiRouter.use(passport.initialize());
@@ -65,30 +58,40 @@ passport.use(new LocalStrategy(
       // Find the user by username
       const user = await usersCollection.findOne({ username: username });
 
-      // close connection to database
+      // close connection to the database
       db.client.close();
-
-      // Close the database connection
-      //client.close();
 
       if (!user) {
         // If user not found, return null and false in the callback
         return done(null, false);
       }
 
-      // Check if the password is valid
-      if (user.password !== password) {
-        // If user found but the password is not valid, return null and false in the callback
-        return done(null, false);
-      }
+      // Use bcrypt to hash the provided password
+      bcrypt.hash(password, 10, async (err, hashedPassword) => {
+        if (err) {
+          return done(err);
+        }
 
-      // If user found and password is valid, return the user object in the callback
-      return done(null, user);
+        // Log the hashed password
+        // console.log('Hashed password: ', hashedPassword);
+
+        // Check if the hashed password matches the stored hashed password
+        const passwordMatches = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatches) {
+          // If user found but the password is not valid, return null and false in the callback
+          return done(null, false);
+        }
+
+        // If user found and password is valid, return the user object in the callback
+        return done(null, user);
+      });
     } catch (err) {
       return done(err);
     }
   }
 ));
+
 
 // Serializing a user determines which data of the user object should be stored in the session
 // pass a user object and a callback function called done after successful authentication
@@ -122,10 +125,23 @@ passport.deserializeUser(async (id, done) => {
   }
 });
 
+const passwordHash = async (password, saltRounds) => {
+  try {
+  	// Generate salt:
+    const salt = await bcrypt.genSalt(saltRounds);
+	// Hash password using generated salt:
+    const hash = await bcrypt.hash(password, salt);
+		return hash;
+  } catch (err) {
+    console.log(err);
+  }
+  //  return null if there’s an error
+  return null;
+};
+
 
 testApiRouter.post('/login', (req, res, next) => {
-  // console.log('req.body from POST to /login', req.body)
-  // initiates the local authentication strategy
+  console.log(req.body)
   passport.authenticate('local', (err, user, info) => {
     if (err) {
       return next(err);
@@ -161,65 +177,10 @@ testApiRouter.get('/logout', (req, res) => {
 });
 
 
-// const quiz = [
-//     {
-//     question: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.',
-//     answers: {
-//         1:{
-//             answer: 'Lorem ipsum',
-//             isCorrect: true
-//         },
-//         2:{
-//             answer: 'dolor sit amet',
-//             isCorrect: false
-//         },
-//         3:{
-//             answer: 'consetetur sadipscing elitr',
-//             isCorrect: false
-//         },
-//         4:{
-//             answer: 'sed diam nonumy',
-//             isCorrect: false
-//         },
-//     }
-//     },{
-//     question: 'Question 2',
-//     answers: {
-//         1:{
-//             answer: 'Hello World',
-//             isCorrect: true
-//         },
-//         2:{
-//             answer: 'Hello Universe',
-//             isCorrect: false
-//         },
-//         3:{
-//             answer: 'Hello City',
-//             isCorrect: false
-//         },
-//         4:{
-//             answer: 'Hello Country',
-//             isCorrect: false
-//         },
-//     }
-//     },
-// ]
-
-// testApiRouter.param('id', (req, res, next, id) => {
-//     const questionId = Number(id);
-//     req.id = questionId;
-// });
-
 testApiRouter.get('/', async (req, res, next) => {
-    // console.log('req.session.passport: ', req.session.passport)
     const db = await connectToDatabase();
-    // let collection = await db.collection("users");
     let quizCollection = await db.collection("quiz");
     let quizData = await quizCollection.find({}).toArray();
-    // let results = await collection.find({username: "carsten"})
-    //   .limit(50)
-    //   .toArray();
-    // close connection to database
     db.client.close();
 
     res.send(quizData)
@@ -252,12 +213,6 @@ testApiRouter.delete('/quiz/:id', async (req, res, next) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
-// handling the preflight OPTIONS request
-// testApiRouter.options('/quiz/:id', (req, res , next) => {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header('Access-Control-Allow-Methods', 'DELETE');
-// });
 
 
 testApiRouter.post('/quiz/add', async (req, res, next) => {
