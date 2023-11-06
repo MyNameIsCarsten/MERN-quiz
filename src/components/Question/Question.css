@@ -31,11 +31,19 @@
       text-align: left;
       margin-left: 0;
     }
+
+    .question {
+      margin: 15px;
+    }
   }
 
   @media only screen and (max-width: 480px) {
     #question {
         text-align: center;
         margin-left: 0;
+    }
+
+    .question {
+      margin: 15px;
     }
   }

@@ -1,22 +1,28 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-export const login = createAsyncThunk('app/login', async ({username, password}) => {
-    const res = await fetch('http://localhost:9000/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password
-      }),
-    })
-    if(!res.ok){
+export const login = createAsyncThunk('app/login', async ({ username, password }) => {
+    try {
+        const res = await fetch('http://localhost:9000/api/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            }),
+        })
+        if (!res.ok) {
+            throw new Error('Anfrage fehlgeschlagen');
+        }
+        const data = await res.json();
+
+        return data;
+    } catch (error) {
         throw new Error('Anfrage fehlgeschlagen');
     }
-    const data = await res.json();
-    return data;
 });
+
 
 export const logout = createAsyncThunk('app/logout', async () => {
     const res = await fetch('http://localhost:9000/api/logout', {
@@ -35,6 +41,7 @@ export const logout = createAsyncThunk('app/logout', async () => {
 export const appSlice = createSlice({
     name: 'app',
     initialState: {
+        user:null,
         isLoggedIn: false,
         isLoading: false,
         isError: false,
@@ -84,7 +91,7 @@ export const appSlice = createSlice({
         start:(state, action) =>{
             state.isStarted = true;
             state.isCompleted = false;
-        },
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(login.pending, (state, action) => {
@@ -95,6 +102,7 @@ export const appSlice = createSlice({
             state.isLoading = false;
             state.isLoggedIn = true;
             state.errorMessage = '';
+            state.user = action.meta.arg.username
         })
         builder.addCase(login.rejected, (state, action) => {
             state.isError = true;
@@ -108,6 +116,7 @@ export const appSlice = createSlice({
         builder.addCase(logout.fulfilled, (state, action) => {
             state.isLoading = false;
             state.isLoggedIn = false;
+            state.user = null;
         })
         builder.addCase(logout.rejected, (state, action) => {
             state.isError = true;
@@ -118,4 +127,4 @@ export const appSlice = createSlice({
 });
 
 export default appSlice.reducer;
-export const { selectAnswer, updateUserIsRight, nextQuestion, toggleSelected, toggleCompleted, reset, start} = appSlice.actions
+export const { loginUser, selectAnswer, updateUserIsRight, nextQuestion, toggleSelected, toggleCompleted, reset, start} = appSlice.actions
