@@ -4,9 +4,16 @@ const express = require('express');
 const testApiRouter = express.Router();
 const session = require("express-session");
 const store = new session.MemoryStore();
+const cors = require('cors');
 
 const connectToDatabase = require("./db/conn.js");
 const { ObjectId } = require('mongodb');
+
+// Allow cross-origin requests with specific configuration
+testApiRouter.use(cors({
+  origin: '*', // Replace with your allowed origins
+  methods: 'DELETE',
+}));
 
 testApiRouter.use(express.json());
 testApiRouter.use(express.urlencoded({ extended: false }));
@@ -116,7 +123,7 @@ passport.deserializeUser(async (id, done) => {
 });
 
 testApiRouter.post('/login', (req, res, next) => {
-  console.log('req.body from POST to /login', req.body)
+  // console.log('req.body from POST to /login', req.body)
   // initiates the local authentication strategy
   passport.authenticate('local', (err, user, info) => {
     if (err) {
@@ -186,25 +193,13 @@ const quiz = [
     },
 ]
 
-testApiRouter.param('id', (req, res, next, id) => {
-    const questionId = Number(id);
-    req.id = questionId;
-    try {
-        const foundQuestion = quiz[questionId]; 
-    
-        if (foundQuestion) {
-          req.foundQuestion = foundQuestion; // Attach the found question to the request object
-          next();
-        } else {
-          next(new Error('Question not found.'));
-        }
-      } catch (err) {
-        next(err);
-      }
-    });
+// testApiRouter.param('id', (req, res, next, id) => {
+//     const questionId = Number(id);
+//     req.id = questionId;
+// });
 
 testApiRouter.get('/', async (req, res, next) => {
-    console.log('req.session.passport: ', req.session.passport)
+    // console.log('req.session.passport: ', req.session.passport)
     const db = await connectToDatabase();
     // let collection = await db.collection("users");
     let quizCollection = await db.collection("quiz");
@@ -219,24 +214,39 @@ testApiRouter.get('/', async (req, res, next) => {
 });
 
 
-testApiRouter.delete('/quiz/:id', (req, res, next) => {
-    if (req.id >= 0 && req.id < quiz.length) {
-        // Check if the question ID is within the valid range
-    
-        const deletedQuestion = quiz.splice(req.id, 1);
-    
-        if (deletedQuestion.length === 1) {
-          // Question successfully deleted
-          res.status(200).json({ message: 'Question deleted successfully', deleted: deletedQuestion[0] });
-        } else {
-          // Question not found
-          res.status(404).json({ message: 'Question not found' });
-        }
-      } else {
-        // Invalid question ID
-        res.status(400).json({ message: 'Invalid question ID' });
-      }
-    });
+testApiRouter.delete('/quiz/:id', async (req, res, next) => {
+  console.log('req.params: ', req.params);
+  const questionId = req.params.id;
+  console.log('QuestionId: ', questionId);
+  try {
+    const db = await connectToDatabase();
+    const quizCollection = db.collection("quiz");
+
+    // Check if the provided ID is a valid ObjectId
+    if (!ObjectId.isValid(questionId)) {
+      return res.status(400).json({ message: 'Invalid question ID' });
+    }
+
+    const result = await quizCollection.deleteOne({ _id: new ObjectId(`${questionId}`) });
+
+    if (result.deletedCount === 1) {
+      res.status(200).json({ message: 'Question deleted successfully' });
+    } else {
+      res.status(404).json({ message: 'Question not found' });
+    }
+
+    db.client.close();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// handling the preflight OPTIONS request
+// testApiRouter.options('/quiz/:id', (req, res , next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Methods', 'DELETE');
+// });
 
 
 testApiRouter.post('/quiz/add', (req, res, next) => {
