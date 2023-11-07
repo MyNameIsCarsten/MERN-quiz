@@ -24,7 +24,7 @@ const Settings = () => {
 
   return (
     <div>
-      <form id="settingsForm">
+      <form id="settingsForm" data-testid='settings'>
         <label htmlFor="randomize">Randomize Quiz:</label>
         <div id="randomizeDiv">
           <input
