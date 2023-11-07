@@ -16,6 +16,7 @@ const Summary = lazy(() => import('../components/Summary/Summary'));
 const Quiz = lazy(() => import('../components/Quiz/quiz'));
 const QuizList = lazy(() => import('../components/QuizList/QuizList'));
 const QuizForm = lazy(() => import('../components/QuizForm/QuizForm'));
+const Settings = lazy(() => import('../components/Settings/Settings'));
 
 
 function App() {
@@ -28,7 +29,7 @@ function App() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      dispatch(fetchQuiz(userId));
+      dispatch(fetchQuiz({id : userId}));
     }
   }, [dispatch, isLoggedIn, userId]);
 
@@ -65,6 +66,11 @@ function App() {
                   <Route path="/login" element={
                     <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
                       <Navigate to="/" />
+                    </Suspense>
+                  } />
+                  <Route path="/settings" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <Settings />
                     </Suspense>
                   } />
               </Routes>
@@ -144,7 +150,12 @@ function App() {
                     <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
                       <QuizForm />
                     </Suspense>
-                  } />
+              } />
+              <Route path="/settings" element={
+                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
+                      <Settings />
+                    </Suspense>
+              } />
             </Routes>
             <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
               <Progressbar />

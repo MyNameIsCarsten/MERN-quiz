@@ -1,0 +1,13 @@
+#settingsForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#randomizeDiv {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin: 10px;
+}
+
