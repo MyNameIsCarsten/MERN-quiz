@@ -29,10 +29,12 @@ const Progressbar = () => {
   }
 
   function calculateProgress() {
-    const quizLength = quiz.length;
-    let progress = (curQuestion + 1 ) / quizLength
-    progress = Math.round(progress * 100)
-    return progress;
+    if (quiz && quiz.length) {
+      const quizLength = quiz.length;
+      const progress = (curQuestion + 1) / quizLength;
+      return Math.round(progress * 100);
+    }
+    return 0; // Default progress when quiz is not available or empty
   }
 
   const style = {

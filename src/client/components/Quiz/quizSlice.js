@@ -19,7 +19,6 @@ function shuffleArray(array) {
   }
 
 export const fetchQuiz = createAsyncThunk('quiz/fetch', async (arg) => {
-    console.log('arg: ', arg)
     const { id, shuffle = false} = arg;
     const res = await fetch('http://127.0.0.1:9000/api');
     if(!res.ok){
@@ -30,9 +29,6 @@ export const fetchQuiz = createAsyncThunk('quiz/fetch', async (arg) => {
     const dataFiltered = data.filter(d => d.users && d.users.some(userId => userId.toString() === `${id}`));
 
     const dataShuffled = shuffleArray(dataFiltered)
-    console.log('id: ', id)
-    console.log('shuffle: ', shuffle)
-
     return shuffle ? dataShuffled : dataFiltered;
 });
 

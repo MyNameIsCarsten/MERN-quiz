@@ -7,21 +7,39 @@ import { selectAnswer, updateUserIsRight } from '../../App/appSlice';
 const Answers = () => {
     const curQuestion = useSelector((state) => state.app.currentQuestion);
     const answers = useSelector((state) => state.quiz.data);
-    const curAnswers = answers[curQuestion].answers
     const dispatch = useDispatch();
   
     function clickHandler(e) {
         // user has made a choice
         dispatch(toggleSelected());
-        // selected answer of user
-        dispatch(selectAnswer(parseInt(e.target.name)));
-        // check if user was right
-        dispatch(updateUserIsRight(curAnswers[e.target.name].isCorrect));
+
+        if(answers && answers[curQuestion]) {
+          const curAnswers = answers[curQuestion].answers
+          const selectedAnswer = parseInt(e.target.name);
+
+          if (curAnswers && curAnswers[selectedAnswer]) {
+            const isCorrect = curAnswers[selectedAnswer].isCorrect;
+            // selected answer of user
+            dispatch(selectAnswer(selectedAnswer));
+            // check if user was right
+            dispatch(updateUserIsRight(isCorrect));
+          }
+        }
     }
 
   return (
-    <div data-testid='answers' id='answers'>
-      { Object.keys(curAnswers).map((a,i) => <Answer key={i} isCorrect={curAnswers[a].isCorrect} clickHandler={clickHandler} text={curAnswers[a].answer} answerId={a}/>)}
+    <div data-testid="answers" id="answers">
+      {answers && answers[curQuestion] && answers[curQuestion].answers
+        ? Object.keys(answers[curQuestion].answers).map((a, i) => (
+            <Answer
+              key={i}
+              isCorrect={answers[curQuestion].answers[a].isCorrect}
+              clickHandler={clickHandler}
+              text={answers[curQuestion].answers[a].answer}
+              answerId={a}
+            />
+          ))
+        : null}
     </div>
   )
 }

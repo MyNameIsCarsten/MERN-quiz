@@ -37,7 +37,7 @@ function App() {
     return (
       <div className="App">
         <Router> {/* Wrap your entire app with the Router component */}
-          <Navbar />
+          <Navbar data-testid='navbar' />
           {!isLoading  ? (
             <div style={{ overflow: 'auto' }}>
               <Routes>

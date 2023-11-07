@@ -1,4 +1,4 @@
-import { render, screen } from '../../setupTests';
+import { render, screen } from '../../../setupTests';
 // npm install redux-mock-store
 import configureStore from 'redux-mock-store';
 import Answers from './Answers';
@@ -63,7 +63,8 @@ describe('Answers Component', () => {
 
     const answerId = 1
     // Simulate a click event
-    userEvent.click(screen.getByText('Hello World'))
+    const answerButton = screen.getByTestId('answers');
+    userEvent.click(answerButton);
 
     
     // Dispatch the action manually into mock store
@@ -85,9 +86,9 @@ describe('Answers Component', () => {
 
     const isRight = true
     // Simulate a click event
-    userEvent.click(screen.getByText('Hello World'))
+    const answerButton = screen.getByTestId('answers');
+    userEvent.click(answerButton);
 
-    
     // Dispatch the action manually into mock store
     store.dispatch(updateUserIsRight(isRight));
 
