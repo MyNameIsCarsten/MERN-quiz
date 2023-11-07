@@ -14,7 +14,6 @@ const Progressbar = () => {
   const isCompleted =  useSelector((state)=>state.app.isCompleted)
   const isStarted = useSelector((state)=> state.app.isStarted)
   const isLoggedIn = useSelector((state) => state.app.isLoggedIn);
-  console.log('isLoggedIn: ', isLoggedIn)
 
   function clickHandler() {
     if(curQuestion + 1 <= quiz.length - 1){

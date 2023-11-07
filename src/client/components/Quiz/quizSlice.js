@@ -1,16 +1,18 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-export const fetchQuiz = createAsyncThunk('quiz/fetch', async () => {
+export const fetchQuiz = createAsyncThunk('quiz/fetch', async (arg) => {
     const res = await fetch('http://127.0.0.1:9000/api');
     if(!res.ok){
         throw new Error('Anfrage fehlgeschlagen');
     }
     const data = await res.json();
-    return data;
+    // Filter out only questions-answer set that the user is part of
+    const dataFiltered = data.filter(d => d.users && d.users.some(userId => userId.toString() === `${arg}`));
+
+    return dataFiltered;
 });
 
 export const deleteQuestion = createAsyncThunk('quiz/delete', async (id) => {
-    console.log('Id in quizSlice: ', id)
     const res = await fetch(`http://localhost:9000/api/quiz/${id}`, {
         method: 'DELETE',
         headers: {

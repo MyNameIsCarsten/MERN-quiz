@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 // import reducers
-import appReducer from './App/appSlice';
-import quizReducer from './components/Quiz/quizSlice';
+import appReducer from './client/App/appSlice';
+import quizReducer from './client/components/Quiz/quizSlice';
 
 export default configureStore({
   reducer: {
