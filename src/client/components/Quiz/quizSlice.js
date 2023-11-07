@@ -1,15 +1,39 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
+function shuffleArray(array) {
+    let currentIndex = array.length,  randomIndex;
+  
+    // While there remain elements to shuffle.
+    while (currentIndex > 0) {
+  
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+  
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+  
+    return array;
+  }
+
 export const fetchQuiz = createAsyncThunk('quiz/fetch', async (arg) => {
+    console.log('arg: ', arg)
+    const { id, shuffle = false} = arg;
     const res = await fetch('http://127.0.0.1:9000/api');
     if(!res.ok){
         throw new Error('Anfrage fehlgeschlagen');
     }
     const data = await res.json();
     // Filter out only questions-answer set that the user is part of
-    const dataFiltered = data.filter(d => d.users && d.users.some(userId => userId.toString() === `${arg}`));
+    const dataFiltered = data.filter(d => d.users && d.users.some(userId => userId.toString() === `${id}`));
 
-    return dataFiltered;
+    const dataShuffled = shuffleArray(dataFiltered)
+    console.log('id: ', id)
+    console.log('shuffle: ', shuffle)
+
+    return shuffle ? dataShuffled : dataFiltered;
 });
 
 export const deleteQuestion = createAsyncThunk('quiz/delete', async (id) => {

@@ -28,6 +28,8 @@ const Navbar = () => {
                 <span>|</span>
                 <Link to="/quiz">Quiz List</Link>
                 <span>|</span>
+                <Link to="/settings">Settings</Link>
+                <span>|</span>
               <button id='logoutBtn' onClick={clickHandler}>Logout</button>
               
             </div>
