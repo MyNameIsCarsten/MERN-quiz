@@ -63,13 +63,13 @@ passport.use(new LocalStrategy(
   
   // user object can be retrieved from the session
   // pass the key that was used when we initially serialized a user (id)
-  passport.deserializeUser(async (id, done) => {
+  passport.deserializeUser(async (_id, done) => {
     try {
       const db = await connectToDatabase();
       const usersCollection = db.collection('users');
   
       // Find the user by their unique identifier (typically ObjectId in MongoDB)
-      const user = await usersCollection.findOne({ _id: ObjectId(id) });
+      const user = await usersCollection.findOne({ _id: ObjectId(_id) });
   
       // close connection to database
       db.client.close();

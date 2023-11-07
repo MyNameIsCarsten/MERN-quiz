@@ -82,7 +82,17 @@ apiRouter.post('/login', (req, res, next) => {
 });
 
 apiRouter.post('/quiz/add', async (req, res, next) => {
-  const newQuestion = req.body;
+  let newQuestion = req.body;
+  
+  const passportData = req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]];
+  const user = JSON.parse(passportData).passport.user
+
+  if (user !== process.env.ADMIN_ID){
+    newQuestion.users = [ new ObjectId(`${process.env.ADMIN_ID}`), new ObjectId(`${user}`) ];
+  } else {
+    newQuestion.users = [ new ObjectId(user) ];
+  }
+  
   const db = await connectToDatabase();
   const quizCollection = db.collection("quiz");
   

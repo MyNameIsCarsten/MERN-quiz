@@ -42,6 +42,7 @@ export const appSlice = createSlice({
     name: 'app',
     initialState: {
         user:null,
+        userId: null,
         isLoggedIn: false,
         isLoading: false,
         isError: false,
@@ -106,13 +107,13 @@ export const appSlice = createSlice({
             state.isCompleted = false;
             state.isStarted = false;
             state.errorMessage = '';
-
         })
         builder.addCase(login.fulfilled, (state, action) => {
             state.isLoading = false;
             state.isLoggedIn = true;
             state.errorMessage = '';
-            state.user = action.meta.arg.username
+            state.user = action.meta.arg.username;
+            state.userId = action.payload.user._id;
         })
         builder.addCase(login.rejected, (state, action) => {
             state.isError = true;

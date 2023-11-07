@@ -13,14 +13,13 @@ const QuizForm = () => {
     if(id !== undefined){
         curQuestionIndex = id
     }
-    console.log('curQuestionIndex: ', curQuestionIndex)
     const quiz = useSelector((state) => state.quiz)
 
     let questionIndex;
     let answers;
     let curQuestion;
 
-    if(id !== undefined){
+    if(id !== undefined ){
         questionIndex = quiz.data.findIndex((element) => element._id === curQuestionIndex)
         answers = quiz.data[questionIndex].answers
         curQuestion = quiz.data[questionIndex].question
@@ -28,14 +27,14 @@ const QuizForm = () => {
     
 
     const [questionValue, setQuestionValue] = useState(id !== undefined ? curQuestion : '');
-    const [answer1Value, setAnswer1Value] = useState(id !== undefined ? answers[1].answer : '');
-    const [isTrue1Value, setIsTrue1Value] = useState(id !== undefined ? answers[1].isCorrect : false);
-    const [answer2Value, setAnswer2Value] = useState(id !== undefined ? answers[2].answer : '');
-    const [isTrue2Value, setIsTrue2Value] = useState(id !== undefined ? answers[2].isCorrect : false);
-    const [answer3Value, setAnswer3Value] = useState(id !== undefined ? answers[3].answer : '');
-    const [isTrue3Value, setIsTrue3Value] = useState(id !== undefined ? answers[3].isCorrect : false);
-    const [answer4Value, setAnswer4Value] = useState(id !== undefined ? answers[4].answer : '');
-    const [isTrue4Value, setIsTrue4Value] = useState(id !== undefined ? answers[4].isCorrect : false);
+    const [answer1Value, setAnswer1Value] = useState(id !== undefined  ? answers[1].answer : '');
+    const [isTrue1Value, setIsTrue1Value] = useState(id !== undefined  ? answers[1].isCorrect : false);
+    const [answer2Value, setAnswer2Value] = useState(id !== undefined  ? answers[2].answer : '');
+    const [isTrue2Value, setIsTrue2Value] = useState(id !== undefined  ? answers[2].isCorrect : false);
+    const [answer3Value, setAnswer3Value] = useState(id !== undefined  ? answers[3].answer : '');
+    const [isTrue3Value, setIsTrue3Value] = useState(id !== undefined  ? answers[3].isCorrect : false);
+    const [answer4Value, setAnswer4Value] = useState(id !== undefined  ? answers[4].answer : '');
+    const [isTrue4Value, setIsTrue4Value] = useState(id !== undefined  ? answers[4].isCorrect : false);
 
     const handleSubmit = (e) => {
         e.preventDefault();

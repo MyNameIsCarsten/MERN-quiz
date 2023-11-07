@@ -21,27 +21,27 @@ const QuizForm = lazy(() => import('../components/QuizForm/QuizForm'));
 function App() {
   const dispatch = useDispatch();
   const isCompleted = useSelector((state) => state.app.isCompleted);
-  const user = useSelector((state) => state.app.user);
+  const userId = useSelector((state) => state.app.userId);
   const isLoggedIn = useSelector((state) => state.app.isLoggedIn);
   const isLoading = useSelector((state) => state.quiz.isLoading);
   const quiz = useSelector((state) => state.quiz.data)
 
   useEffect(() => {
     if (isLoggedIn) {
-      dispatch(fetchQuiz());
+      dispatch(fetchQuiz(userId));
     }
-  }, [dispatch, isLoggedIn]);
+  }, [dispatch, isLoggedIn, userId]);
 
   if(!isCompleted && isLoggedIn){
     return (
       <div className="App">
         <Router> {/* Wrap your entire app with the Router component */}
           <Navbar />
-          {!isLoading && quiz.length > 0 ? (
+          {!isLoading  ? (
             <div style={{ overflow: 'auto' }}>
               <Routes>
-                {user === 'admin' ? 
-                <>
+
+
                   <Route exact path="/" element={
                     <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
                       <Quiz />
@@ -67,22 +67,6 @@ function App() {
                       <Navigate to="/" />
                     </Suspense>
                   } />
-                </>
-                :
-                <>
-                  <Route exact path="/" element={
-                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
-                      <Quiz />
-                    </Suspense>
-                  } />
-
-                  <Route path="/login" element={
-                    <Suspense fallback={<div style={{ display:'flex', justifyContent:'center' }}>Loading...</div>}>
-                      <Navigate to="/" />
-                    </Suspense>
-                  } />
-                </>
-              }
               </Routes>
             </div>
           ) : (

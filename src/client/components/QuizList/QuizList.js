@@ -7,13 +7,14 @@ import { Link } from 'react-router-dom';
 const QuizList = () => {
     const dispatch = useDispatch();
     const questions = useSelector((state) => state.quiz.data);
+    const userId = useSelector((state) => state.app.userId);
 
     const handleDelete = async (id) =>{
         try {
             const result = await dispatch(deleteQuestion(id));
 
             if(deleteQuestion.fulfilled.match(result)){
-                dispatch(fetchQuiz());
+                dispatch(fetchQuiz(userId));
             }
         } catch (error){
             throw new Error ('Could not delete Question')

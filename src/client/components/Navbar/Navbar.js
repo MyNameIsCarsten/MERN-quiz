@@ -6,7 +6,6 @@ import { logout } from '../../App/appSlice';
 const Navbar = () => {
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.app.isLoggedIn);
-  const user = useSelector((state) => state.app.user);
 
   const clickHandler = () => {
     dispatch(logout((error) => {
@@ -25,16 +24,10 @@ const Navbar = () => {
               <Link to="/">Home</Link>
             </div>
             <div className='rightNav'>
-              {user === 'admin' ? 
-              <>
                 <Link to="/quiz/add">Add Quiz</Link>
                 <span>|</span>
                 <Link to="/quiz">Quiz List</Link>
                 <span>|</span>
-              </>
-              :
-              ''
-              }
               <button id='logoutBtn' onClick={clickHandler}>Logout</button>
               
             </div>
