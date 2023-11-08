@@ -8,6 +8,9 @@ require("../loadEnvironment.js");
 // set up Passport’s local strategy / passport config
 passport.use(new LocalStrategy(
     async (username, password, done) => {
+      console.log("\n===========LocalStrategy===================\n")
+      console.log(`Value of "User" in LocalStrategy function ----> ${username}`)         //passport will populate, user = req.body.username
+      console.log(`Value of "Password" in LocalStrategy function ----> ${password}`) //passport will popuplate, password = req.body.password
       try {
         // Connect to the MongoDB database
         const db = await connectToDatabase();
@@ -56,6 +59,8 @@ passport.use(new LocalStrategy(
   // Serializing a user determines which data of the user object should be stored in the session
   // pass a user object and a callback function called done after successful authentication
   passport.serializeUser((user, done) => {
+    console.log("\n===========serializeUser===================\n")
+    console.log(user)
     // done(error object, value to be stored)
     done(null, user._id);
     // stores it internally on req.session.passport
@@ -63,13 +68,15 @@ passport.use(new LocalStrategy(
   
   // user object can be retrieved from the session
   // pass the key that was used when we initially serialized a user (id)
-  passport.deserializeUser(async (_id, done) => {
+  passport.deserializeUser(async (id, done) => {
+    console.log("---------> Deserialize Id")
+    console.log(id)
     try {
       const db = await connectToDatabase();
       const usersCollection = db.collection('users');
   
       // Find the user by their unique identifier (typically ObjectId in MongoDB)
-      const user = await usersCollection.findOne({ _id: ObjectId(_id) });
+      const user = await usersCollection.findOne({ _id: ObjectId(id) });
   
       // close connection to database
       db.client.close();
@@ -84,3 +91,9 @@ passport.use(new LocalStrategy(
       return done(err);
     }
   });
+  // passport.deserializeUser((_id, done) => {
+  //   console.log("---------> Deserialize Id")
+  //   console.log(_id)
+
+  //   done (null, {name: "Kyle", id: 123} )
+  // }) 

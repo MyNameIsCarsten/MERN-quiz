@@ -1,52 +1,40 @@
 // Import packages //
 const express = require('express');
-const session = require("express-session");
-const passport = require("passport");
-
+const passport = require('passport')
 
 const apiRouter = express.Router();
-const store = new session.MemoryStore();
 
 const connectToDatabase = require("./db/conn.js");
 const { ObjectId } = require('mongodb');
 
 
-// App config //
-apiRouter.use(express.json());
-apiRouter.use(express.urlencoded({ extended: false }));
 require("./loadEnvironment.js");
-require("./config/passport");
-
-
-
-
-// generate unique session / Session Config
-apiRouter.use(
-  session({
-    // key used for signing and/or encrypting cookies in order to protect our session ID
-    // random string should be stored securely in an environment variable, not in the code
-    secret: "f4z4gs$Gcg",
-    // cookie that stores the session ID
-    cookie: { maxAge: 300000000, secure: false },
-    // if true, server will store every new session, even if there are no changes to the session object
-    saveUninitialized: false,
-    // if true, force a session to be saved back to the session data store, even when no data was modified
-    resave: false,
-    store,
-  })
-);
-
-// Passport Config //
-// Initialize the passport library
-apiRouter.use(passport.initialize());
-
-// Implement a session with passport below /  include the session with passport
-apiRouter.use(passport.session());
 
 
 // Setting up endpoins //
 
+apiRouter.post('/login', (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) { return next(err) }
+    if (!user) { return res.status(401).redirect('/login') }
+    // Manually serialize the user into the session
+    req.logIn(user, (err) => {
+      if (err) { return next(err) }
+      // At this point, the user should be serialized into the session.
+      // You can now redirect or perform other actions as needed.
+      res.header('Access-Control-Allow-Credentials', 'true');
+      // return user data to the client
+      // return res.status(200).json({ message: 'Authentication successful', user });
+      
+      res.redirect('/');
+    });
+  })(req, res, next);
+});
+
+
+
 apiRouter.get('/', async (req, res, next) => {
+  console.log('req.isAuthenticated: ', req.isAuthenticated())
   const db = await connectToDatabase();
   let quizCollection = await db.collection("quiz");
   let quizData = await quizCollection.find({}).toArray();
@@ -61,24 +49,6 @@ apiRouter.get('/logout', (req, res) => {
     }
     return res.status(200).json({ message: 'Logged out successfully' });
   });
-});
-
-apiRouter.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.status(401).redirect('/login');
-    }
-    req.logIn(user, (err) => {
-      if (err) {
-        return next(err);
-      }
-      // return user data to the client
-      return res.status(200).json({ message: 'Authentication successful', user });
-    });
-  })(req, res, next);
 });
 
 apiRouter.post('/quiz/add', async (req, res, next) => {

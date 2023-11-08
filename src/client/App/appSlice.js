@@ -11,15 +11,18 @@ export const login = createAsyncThunk('app/login', async ({ username, password }
                 username: username,
                 password: password
             }),
+            credentials:'include',
         })
         if (!res.ok) {
-            throw new Error('Anfrage fehlgeschlagen');
+            const errorData = await res.json();
+            const errorMessage = errorData.message || 'An error occurred during the request';
+            throw new Error(`Request failed with status: ${res.status}, Message: ${errorMessage}`);
         }
         const data = await res.json();
 
         return data;
     } catch (error) {
-        throw new Error('Anfrage fehlgeschlagen');
+        throw new Error(`An unexpected error occurred: ${error.message}`);
     }
 });
 
@@ -113,12 +116,13 @@ export const appSlice = createSlice({
             state.isLoggedIn = true;
             state.errorMessage = '';
             state.user = action.meta.arg.username;
-            state.userId = action.payload.user._id;
+            // state.userId = action.payload.user._id;
+            state.userId = action.payload._id;
         })
         builder.addCase(login.rejected, (state, action) => {
             state.isError = true;
             state.isLoading = false;
-            state.errorMessage = 'Verify that your username and password are correct.';
+            state.errorMessage = action.error.message;
         })
         builder.addCase(logout.pending, (state, action) => {
             state.isLoading = true;
@@ -128,11 +132,12 @@ export const appSlice = createSlice({
             state.isLoading = false;
             state.isLoggedIn = false;
             state.user = null;
+            state.userId = null;
         })
         builder.addCase(logout.rejected, (state, action) => {
             state.isError = true;
             state.isLoading = false;
-            state.errorMessage = 'Logout was not possible.';
+            state.errorMessage = action.error.message;
         })
     }
 });

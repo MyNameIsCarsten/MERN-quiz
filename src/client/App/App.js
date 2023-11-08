@@ -30,7 +30,7 @@ function App() {
   useEffect(() => {
     if (isLoggedIn) {
       dispatch(fetchQuiz({id : userId}));
-    }
+    } 
   }, [dispatch, isLoggedIn, userId]);
 
   if(!isCompleted && isLoggedIn){
