@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({
-  origin: 'http://localhost:3000', // Replace with your allowed origins
+  origin: ['http://localhost:3000', 'https://quizify-mern-app.netlify.app'], // Replace with your allowed origins
   methods: '*',
   credentials: true, // Allow credentials (cookies, sessions) to be sent in the request
 }));
