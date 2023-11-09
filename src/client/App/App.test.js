@@ -1,31 +1,45 @@
+/* eslint-disable testing-library/no-unnecessary-act */
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '../../setupTests';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import store from '../../store'; 
 import App from './App';
 import reducer, { selectAnswer, updateUserIsRight, nextQuestion, toggleSelected, toggleCompleted, reset, start} from './appSlice';
+// Import a mock store
+import configureStore from 'redux-mock-store';
+
 
 const initialState = {
-  user: null,
-  userId: null,
-  isLoggedIn: false,
-  isLoading: false,
-  isError: false,
-  hasSelected: false,
-  selectedAnswer: null,
-  currentQuestion: 0,
-  userIsRight: null,
-  correctAnswers: 0,
-  totalAnswers: 0,
-  isCompleted: false,
-  isStarted: false,
-  errorMessage: '',
+  app: {
+    isCompleted: false,
+  },
+  quiz: {
+    user: null,
+    userId: null,
+    isLoggedIn: false,
+    isLoading: false,
+    isError: false,
+    hasSelected: false,
+    selectedAnswer: null,
+    currentQuestion: 0,
+    userIsRight: null,
+    correctAnswers: 0,
+    totalAnswers: 0,
+    isCompleted: false,
+    isStarted: false,
+    errorMessage: '',
+  }
 };
 
 describe('App', () => {
+
+  // Create a mock store
+  const mockStore = configureStore([]);
+  const store = mockStore(initialState);
+
   it('should return initial state', () => {
-    expect(reducer(undefined, { type: 'unknown' })).toEqual(initialState);
+    expect(reducer(undefined, { type: 'unknown' })).toEqual(initialState.quiz);
   });
 
   it('should handle selectAnswer action', () => {
@@ -34,11 +48,11 @@ describe('App', () => {
     const payload = 1 ;
     const action = selectAnswer(payload);
 
-    const nextState = reducer(initialState, action);
+    const nextState = reducer(initialState.quiz, action);
 
     // Define the expected state after the action
     const expectedState = {
-      ...initialState,
+      ...initialState.quiz,
       totalAnswers: 1,
       selectedAnswer: 1
     };
@@ -51,11 +65,11 @@ describe('App', () => {
     const payload = true ;
     const action = updateUserIsRight(payload);
 
-    const nextState = reducer(initialState, action);
+    const nextState = reducer(initialState.quiz, action);
 
     // Define the expected state after the action
     const expectedState = {
-      ...initialState,
+      ...initialState.quiz,
       userIsRight: true,
       correctAnswers: 1
     };
@@ -67,11 +81,11 @@ describe('App', () => {
     // Create the action
     const action = nextQuestion();
 
-    const nextState = reducer(initialState, action);
+    const nextState = reducer(initialState.quiz, action);
 
     // Define the expected state after the action
     const expectedState = {
-      ...initialState,
+      ...initialState.quiz,
       currentQuestion: 1,
       hasSelected: false,
       userIsRight: null,
@@ -116,11 +130,11 @@ describe('App', () => {
     // Create the action
     const action = reset();
 
-    const nextState = reducer(initialState, action);
+    const nextState = reducer(initialState.quiz, action);
 
     // Define the expected state after the action
     const expectedState = {
-      ...initialState,
+      ...initialState.quiz,
     };
     expect(nextState).toEqual(expectedState);
   });
@@ -142,7 +156,7 @@ describe('App', () => {
   });
 
   it('renders navbar', async () => {
-    await act(async () => { 
+    await act(async () => {
       render(
         <Provider store={store}>
           <App />
@@ -155,13 +169,11 @@ describe('App', () => {
   });
 
   it('renders progressbar', async () => {
-    await act(async () => { 
-      render(
-        <Provider store={store}>
-          <App />
-        </Provider>
-      );
-    });
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
     const progressbarElement = screen.getByTestId('progressbar');
     expect(progressbarElement).toBeInTheDocument();
   });

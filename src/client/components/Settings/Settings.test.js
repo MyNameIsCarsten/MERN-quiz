@@ -1,24 +1,39 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '../../../setupTests';
 import { act } from 'react-dom/test-utils';
 import { Provider } from 'react-redux';
 import store from '../../../store';
 import Settings from './Settings';
 import reducer, { toggleRandomize} from './settingsSlice';
 import { MemoryRouter } from 'react-router';
+import configureStore from 'redux-mock-store';
+
+const mockStore = configureStore([]);
 
 const initialState = {
-    randomize: false
+      app: {
+        userId: null
+      }, 
+      settings: {
+        randomize: false
+      }
   };
 
 
 describe('Settings', () => {
+    let mockReduxStore;
+
+    beforeEach(() => {
+      mockReduxStore = mockStore(initialState);
+    })
+
     it('should return initial state', () => {
-        expect(reducer(undefined, { type: 'unknown' })).toEqual(initialState);
+        expect(reducer(undefined, { type: 'unknown' })).toEqual({ "randomize": false });
     });
+
     it('renders settings', () => {
         render(
-        <Provider store={store}>
+        <Provider store={mockReduxStore}>
             <MemoryRouter>
                 <Settings />
             </MemoryRouter>

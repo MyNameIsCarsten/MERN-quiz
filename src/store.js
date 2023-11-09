@@ -1,12 +1,20 @@
 import { combineReducers  } from 'redux'
-import { configureStore, getDefaultMiddleware  } from "@reduxjs/toolkit";
-import { persistStore, persistReducer } from "redux-persist";
+import { configureStore  } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage"; // Defaults to localStorage
-import thunk from 'redux-thunk';
 // import reducers
 import appReducer from './client/App/appSlice';
 import quizReducer from './client/components/Quiz/quizSlice';
 import settingsReducer from './client/components/Settings/settingsSlice';
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist'
 
 const persistConfig = {
   key: "root", // Key to store the data in storage
@@ -15,7 +23,7 @@ const persistConfig = {
   // whitelist: ['quiz'], // Specify which reducers to persist
 };
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   app: appReducer,
   quiz: quizReducer,
   settings: settingsReducer,
@@ -23,11 +31,14 @@ const rootReducer = combineReducers({
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const middleware = [...getDefaultMiddleware(), thunk];
-
 export const store = configureStore({
   reducer: persistedReducer, // Use the persistedReducer
-  middleware
+  middleware: getDefaultMiddleware =>
+  getDefaultMiddleware({
+    serializableCheck: {
+      ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+    },
+  }),
 });
 
 export const persistor = persistStore(store); // Create the persistor
