@@ -21,10 +21,8 @@ const Login = () => {
         }
     }
 
-
-
   return (
-    <div>
+    <div data-testid='login'>
       <p id='error'>{errorMessage !== '' && !isLoading ? errorMessage : ''}</p>
       {!isLoading ? <form id="loginForm" onSubmit={handleSubmit}>
             <label htmlFor='username'>Username:</label>

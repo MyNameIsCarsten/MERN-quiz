@@ -22,7 +22,7 @@ const QuizList = () => {
     };
 
   return (
-    <div style={{backgroundColor: '#10162F'}}>
+    <div style={{backgroundColor: '#10162F'}} data-testid='quizlist'>
         <h2 id='questionList'>Question List:</h2>
         {Object.keys(questions).map((q, i) => 
             <div key={i} className='questionCard'>

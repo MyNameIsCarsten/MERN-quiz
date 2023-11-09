@@ -8,7 +8,7 @@ const Quiz = () => {
   const isStarted = useSelector((state)=> state.app.isStarted)
 
   return (
-    <div>
+    <div data-testid='quiz'>
         {isLoggedIn && isStarted ? 
         (<>
           <Question />

@@ -2,6 +2,18 @@
 
 This is a full-stack MERN (MongoDB, Express, React, Node.js) quiz application that allows users to create, take, and manage quizzes.
 
+## Dashboard
+![Dashboard](./dashboard.png)
+## Quiz
+![Quiz](./quiz.png)
+## Summary
+![Summary](./summary.png)
+## Edit or Delete a Question
+![Edit or Delete](./updateordelete.png)
+![Edit](./edit.png)
+## Settings
+![Settings](./settings.png)
+
 ## Table of Contents
 
 - [Features](#features)
@@ -26,19 +38,18 @@ This is a full-stack MERN (MongoDB, Express, React, Node.js) quiz application th
   - React
   - React Router for routing
   - Fetch for making API requests
-  - State management using Redux
+  - State management using Redux (including redux-persist)
   - Lazy Loading + Suspense
 
 - **Backend:**
   - Node.js
   - Express.js
   - MongoDB for data storage
+  - Nodemon
+  - bcyrpt
 
 - **Authentication:**
   - Passport.js
-
-- **Deployment:**
-  - Netlify
 
 - **Testing:**
   - Jest
@@ -83,6 +94,7 @@ Before you begin, ensure you have met the following requirements:
 5. Back in the project root, create a `.env` file and configure the following environment variables:
 
    - `ATLAS_URI`: Your MongoDB connection string.
+   - `ADMIN_ID`: Id of your admin with your MongoDB-Users collection
 
 6. Start the development server:
 
@@ -96,12 +108,13 @@ Your MERN quiz app should now be up and running.
 
 1. Access the app in your web browser by navigating to `http://localhost:3000`.
 
-2. Sign up and log in to create and manage quizzes.
+2. Log in to create and manage quizzes.
 
-`username: admin, password: new`
-`username: user, password: new`
+`Please contact me for testing credentials`
 
-3. Users can take quizzes created by others.
+![Login](./login.png)
+
+3. Users can take quizzes created by themself.
 
 4. Enjoy the quiz-taking and creation experience!
 
