@@ -33,7 +33,11 @@ app.use(
     // random string should be stored securely in an environment variable, not in the code
     secret: "f4z4gs$Gcg",
     // cookie that stores the session ID
-    cookie: { maxAge: 300000000, secure: false },
+    cookie: {
+      maxAge: 300000000,
+      secure: process.env.NODE_ENV === 'production', // Set to true in production
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // Adjust based on your needs
+    },
     // if true, server will store every new session, even if there are no changes to the session object
     saveUninitialized: true,
     // if true, force a session to be saved back to the session data store, even when no data was modified
@@ -52,9 +56,9 @@ app.use(passport.session());
 // set up Passport’s local strategy / passport config
 passport.use(new LocalStrategy(
   async (username, password, done) => {
-    console.log("\n===========LocalStrategy===================\n")
-    console.log(`Value of "User" in LocalStrategy function ----> ${username}`)         //passport will populate, user = req.body.username
-    console.log(`Value of "Password" in LocalStrategy function ----> ${password}`) //passport will popuplate, password = req.body.password
+    // console.log("\n===========LocalStrategy===================\n")
+    // console.log(`Value of "User" in LocalStrategy function ----> ${username}`)         //passport will populate, user = req.body.username
+    // console.log(`Value of "Password" in LocalStrategy function ----> ${password}`) //passport will popuplate, password = req.body.password
     try {
       // Connect to the MongoDB database
       const db = await connectToDatabase();
@@ -100,16 +104,16 @@ passport.use(new LocalStrategy(
 ));
 
 passport.serializeUser((user, done) => {
-  console.log("\n===========serializeUser===================\n")
-  console.log(user)
+  // console.log("\n===========serializeUser===================\n")
+  // console.log(user)
   // done(error object, value to be stored)
   done(null, user._id);
   // stores it internally on req.session.passport
 });
 
 passport.deserializeUser(async (_id, done) => {
-  console.log("---------> Deserialize Id")
-  console.log(_id)
+  // console.log("---------> Deserialize Id")
+  // console.log(_id)
   try {
     const db = await connectToDatabase();
     const usersCollection = db.collection('users');
@@ -160,14 +164,14 @@ const printData = (req, res, next) => {
   next()
 }
 
-app.use(printData)
+// app.use(printData)
 
 
 const apiRouter = require('./routes/api');
 app.use('/api', apiRouter);
 
 app.get("/", (req, res) => {
-  console.log(req.isAuthenticated())
+  console.log('GET / req.isAuthenticated(): ', req.isAuthenticated())
   res.send(req.user)
 })
 

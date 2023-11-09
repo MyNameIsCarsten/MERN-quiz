@@ -8,9 +8,9 @@ require("../loadEnvironment.js");
 // set up Passport’s local strategy / passport config
 passport.use(new LocalStrategy(
     async (username, password, done) => {
-      console.log("\n===========LocalStrategy===================\n")
-      console.log(`Value of "User" in LocalStrategy function ----> ${username}`)         //passport will populate, user = req.body.username
-      console.log(`Value of "Password" in LocalStrategy function ----> ${password}`) //passport will popuplate, password = req.body.password
+      // console.log("\n===========LocalStrategy===================\n")
+      // console.log(`Value of "User" in LocalStrategy function ----> ${username}`)         //passport will populate, user = req.body.username
+      // console.log(`Value of "Password" in LocalStrategy function ----> ${password}`) //passport will popuplate, password = req.body.password
       try {
         // Connect to the MongoDB database
         const db = await connectToDatabase();
@@ -59,8 +59,8 @@ passport.use(new LocalStrategy(
   // Serializing a user determines which data of the user object should be stored in the session
   // pass a user object and a callback function called done after successful authentication
   passport.serializeUser((user, done) => {
-    console.log("\n===========serializeUser===================\n")
-    console.log(user)
+    // console.log("\n===========serializeUser===================\n")
+    // console.log(user)
     // done(error object, value to be stored)
     done(null, user._id);
     // stores it internally on req.session.passport
@@ -69,8 +69,8 @@ passport.use(new LocalStrategy(
   // user object can be retrieved from the session
   // pass the key that was used when we initially serialized a user (id)
   passport.deserializeUser(async (id, done) => {
-    console.log("---------> Deserialize Id")
-    console.log(id)
+    // console.log("---------> Deserialize Id")
+    // console.log(id)
     try {
       const db = await connectToDatabase();
       const usersCollection = db.collection('users');

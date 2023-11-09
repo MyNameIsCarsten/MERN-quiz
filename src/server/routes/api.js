@@ -16,7 +16,11 @@ require("./loadEnvironment.js");
 apiRouter.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
     if (err) { return next(err) }
-    if (!user) { return res.status(401).redirect('/login') }
+    if (!user) {
+      console.error('User not found during authentication');
+      return res.status(401).redirect('/login');
+  }
+  
     // Manually serialize the user into the session
     req.logIn(user, (err) => {
       if (err) { return next(err) }
