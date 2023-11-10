@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 export const login = createAsyncThunk('app/login', async ({ username, password }) => {
     try {
-        const res = await fetch(process.env.NODE_ENV === 'production' ? 'https://quizify-mern-app.netlify.app//api/login' : 'http://localhost:9000/api/login', {
+        const res = await fetch(process.env.NODE_ENV === 'production' ? 'https://quizify-mern-app.netlify.app/api/login' : 'http://localhost:9000/api/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
