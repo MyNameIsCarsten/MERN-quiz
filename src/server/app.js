@@ -24,6 +24,7 @@ app.use(cors({
   credentials: true, // Allow credentials (cookies, sessions) to be sent in the request
 }));
 app.use(morgan('dev'));
+app.options('*', cors());
 
 //--------------- Middleware ----------------//
 // generate unique session / Session Config
