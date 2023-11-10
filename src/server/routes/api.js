@@ -49,7 +49,6 @@ apiRouter.post('/login', (req, res, next) => {
 
 
 
-
 apiRouter.get('/', async (req, res, next) => {
   console.log('req.isAuthenticated: ', req.isAuthenticated())
   const db = await connectToDatabase();

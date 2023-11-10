@@ -175,4 +175,11 @@ app.get("/", (req, res) => {
   res.send(req.user)
 })
 
+app.get('/login', (req, res) => {
+  res.json({
+    isAuthenticated: req.isAuthenticated(),
+    user: req.isAuthenticated() ? req.user : null,
+  });
+});
+
 module.exports = app;
