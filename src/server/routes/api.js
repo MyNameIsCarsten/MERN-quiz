@@ -15,25 +15,38 @@ require("./loadEnvironment.js");
 
 apiRouter.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
-    if (err) { return next(err) }
+    if (err) {
+      console.error('Error during authentication:', err);
+      return next(err);
+    }
     if (!user) {
       console.error('User not found during authentication');
       return res.status(401).redirect('/login');
-  }
-  
+    }
+
     // Manually serialize the user into the session
     req.logIn(user, (err) => {
-      if (err) { return next(err) }
+      if (err) {
+        console.error('Error during user serialization:', err);
+        return next(err);
+      }
+
       // At this point, the user should be serialized into the session.
       // You can now redirect or perform other actions as needed.
+      console.log('User successfully authenticated:', user);
+
+      // Set CORS headers
       res.header('Access-Control-Allow-Credentials', 'true');
-      // return user data to the client
-      // return res.status(200).json({ message: 'Authentication successful', user });
-      
+
+      // Return user data to the client if needed
+      // res.status(200).json({ message: 'Authentication successful', user });
+
+      // Redirect to the home page
       res.redirect('/');
     });
   })(req, res, next);
 });
+
 
 
 
